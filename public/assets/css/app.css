@@ -1,0 +1,11 @@
+body {
+  background-color: #fff;
+}
+.user-space {
+  border: 3px solid #fff;
+  padding: 15px;
+  border-radius: 10px;
+  text-align: right;
+  float: right;
+  width: 70%;
+}

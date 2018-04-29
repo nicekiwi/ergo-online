@@ -1,0 +1,23 @@
+{
+  "name": "ergo-online",
+  "version": "1.0.0",
+  "description": "Do you exist? I think therefore I am? From Socrates to Descartes.",
+  "author": "Ezra Sharp <ezra.sharp@nice.kiwi>",
+  "private": true,
+  "engines": {
+    "node": ">= 6.0.0",
+    "npm": ">= 3.0.0"
+  },
+  "browserslist": [
+    "> 1%",
+    "last 2 versions",
+    "not ie <= 8"
+  ],
+  "dependencies": {
+    "@koa/cors": "^2.2.1",
+    "koa": "^2.5.1",
+    "koa-router": "^7.4.0",
+    "lokijs": "^1.5.3",
+    "nanoid": "^1.0.2"
+  }
+}
