@@ -1,63 +1,157 @@
 
-let CreateUser = Vue.component('CreateUser', {
-  data: function () {
+let GameNewModal = Vue.component('GameNewModal', {
+  props: [ 'modalOpen' ],
+  mounted() {},
+  data() {
     return {
-      count: 0
+      playerName: "Surf_King",
+      gameName: "BattleBots Attack!",
+      maxPlayers: 4,
+      turnTimeLimit: 30000,
+      visibility: "public",
+      scoreLimit: 50
     }
   },
   methods: {
-    
+    closePopup() {
+      VueEvent.fire('modal-close-new-game');
+    }
   },
   template: `
-    <div>
-      <h2 class="title">Create Username</h2>
-      <div class="field">
-        <label class="label">Username</label>
-        <div class="control has-icons-left has-icons-right">
-          <input class="input is-success" type="text" placeholder="Text input" value="bulma">
-          <span class="icon is-small is-left">
-            <i class="fas fa-user"></i>
-          </span>
-          <span class="icon is-small is-right">
-            <i class="fas fa-check"></i>
-          </span>
+    <div :class="'modal' + (modalOpen ? ' is-active' : '')">
+      <div class="modal-background"></div>
+      <div class="modal-content box">
+        <div class="columns">
+          <div class="column">
+            <h2 class="title is-3">Start a new game</h2>
+          </div>
+        </div>
+        <div class="columns">
+          <div class="column">
+            <div class="field">
+              <label class="label">Player Name</label>
+              <div class="control">
+                <input v-model="playerName" class="input" type="text" placeholder="Surf_King">
+              </div>
+              <p class="help">Your player name in the game, max 12 characters, numbers and letters only.</p>
+            </div>
+          </div>
+          <div class="column">
+            <div class="field">
+              <label class="label">Game Name</label>
+              <div class="control">
+                <input v-model="gameName" class="input" type="text" placeholder="BattleBots_Attack">
+              </div>
+              <p class="help">All games need a name right?</p>
+            </div>
+          </div>
+        </div>
+        <div class="columns">
+          <div class="column">
+            <div class="field">
+              <label class="label">Number of players</label>
+              <div class="control">
+                <div class="select is-primary">
+                  <select v-model="maxPlayers">
+                    <option value="2">2 Players</option>
+                    <option value="3">3 Players</option>
+                    <option value="4" selected>4 Players</option>
+                  </select>
+                </div>
+              </div>
+              <p class="help">Minimum 2, Maximum 4.</p>
+            </div>
+          </div>
+          <div class="column">
+            <div class="field">
+              <label class="label">Turn time limit</label>
+              <div class="control">
+                <div class="select is-primary">
+                  <select v-model="turnTimeLimit">
+                    <option selected value="30000">30 seconds</option>
+                    <option value="60000">60 seconds</option>
+                    <option value="90000">90 seconds</option>
+                  </select>
+                </div>
+              </div>
+              <p class="help">Keep the game moving with a time limit on each player\'s turn, after which they\'ll be forced to discard and end their turn.</p>
+            </div>
+          </div>
+        </div>
+        <div class="columns">
+          <div class="column">
+            <div class="field">
+              <label class="label">Visbility</label>
+              <div class="control">
+                <div class="select is-primary">
+                  <select v-model="visibility">
+                    <option selected value="public">Public</option>
+                    <option value="private">Private</option>
+                  </select>
+                </div>
+              </div>
+              <p class="help">Private Games do not display in the Game Browser and can only be joined by those you share the link with.</p>
+            </div>
+          </div>
+          <div class="column">
+            <div class="field">
+              <label class="label">Score Limit</label>
+              <div class="control">
+                <div class="select is-primary">
+                <select v-model="scoreLimit">
+                  <option value="50">50</option>
+                  <option selected value="100">100</option>
+                  <option value="250">250</option>
+                </select>
+              </div>
+              </div>
+              <p class="help">When does the game end?</p>
+            </div>
+          </div>
+        </div>
+        <div class="columns">
+          <div class="column">
+            <a class="button is-large is-primary">Start Game</a>
+          </div>
         </div>
       </div>
+      <button v-on:click="closePopup()" class="modal-close is-large" aria-label="close"></button>
     </div>
   `
 });
 
-let GameBrowser = Vue.component('GameBrowser', {
+let GameListPage = Vue.component('GameListPage', {
   mounted() {
     setInterval(() => {
       this.refreshList()
     }, 15000)
 
-    this.refreshList()
+    this.refreshList();
+
+    VueEvent.on('modal-close-new-game', data => {
+      this.newGameModalOpen = false;
+    });
   },
   data() {
     return {
-      games: []
+      games: [],
+      newGameModalOpen: false
     }
   },
   methods: {
     refreshList() {
-      axios.get('http://127.0.0.1:3000/games').then(res => {
-          this.games = res.data;
-        });
+      axios.get('http://127.0.0.1:3000/games/list').then(res => { this.games = res.data});
     },
-    newGame() {
-      axios.post('http://127.0.0.1:3000/games/new', { userId: Cookies.get('ergoUser') }).then(res => {
-        this.$router.push(`/${res.data.id}`)
-      });
+    openNewGameModal() {
+      this.newGameModalOpen = true;
     },
     joinGame(id) {
-      this.$router.push(`/${id}`)
+      this.$router.push(`/games/${id}`)
     }
   },
   template: `
     <div>
-      <button class="button is-link" v-on:click="newGame()">New Game</button>
+      <button class="button is-link" v-on:click="openNewGameModal()">New Game</button>
       <table class="table">
         <thead>
           <tr>
@@ -76,13 +170,14 @@ let GameBrowser = Vue.component('GameBrowser', {
           </tr>
         </tbody>
       </table>
+      <GameNewModal :modalOpen=newGameModalOpen />
     </div>
   `
 });
 
-let GameActive = Vue.component('GameActive', {
+let GameActivePage = Vue.component('GameActivePage', {
   mounted() {
-    axios.get(`http://127.0.0.1:3000/game/data/${this.$route.params.id}`).then(res => {
+    axios.get(`/game/data/${this.$route.params.id}`).then(res => {
       this.games = res.data;
     });
   },
@@ -101,13 +196,11 @@ let GameActive = Vue.component('GameActive', {
   `
 });
 
-const routes = [
-  { path: '/', component: GameBrowser },
-  { path: '/create-user', component: CreateUser },
-  { path: '/:id', component: GameActive }
-]
+const router = new VueRouter({ routes: [
+  { path: '/', component: GameListPage },
+  { path: '/:gameId', component: GameActivePage }
+] })
 
-const router = new VueRouter({ routes })
 const app = new Vue({ 
   router, 
   mounted() {
@@ -120,8 +213,6 @@ const app = new Vue({
     if (userIdCookie) {
       this.user.id = userIdCookie;
       this.user.name = userNameCookie;
-    } else {
-      this.$router.push('/create-user');
     }
   },
   data() {

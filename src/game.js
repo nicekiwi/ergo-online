@@ -128,9 +128,13 @@ let Game = function (players, round) {
     valid: false
   }
 
+  this.addPlayer = function (name, letter) {
+    this.players.push(new Player(name, letter));
+  }
+
   this.addPlayers = function () {
     for (let i=0;i<players.length;i++) {
-      this.players.push(new Player(players[i].name, playerVariables[i]));
+      this.addPlayer(players[i].name, playerVariables[i]);
     }
   }
 
@@ -158,8 +162,6 @@ let Game = function (players, round) {
 
   // Deal cards to players
   this.dealCards();
-
-
 
 };
 
