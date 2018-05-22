@@ -1,20 +1,86 @@
 
-let GameNewModal = Vue.component('GameNewModal', {
-  props: [ 'modalOpen' ],
-  mounted() {},
+let GameJoinModal = Vue.component('GameJoinModal', {
+  mounted() {
+    VueEvent.on('modal-open-join-game', data => {
+      this.modalOpen = true
+    });
+  },
   data() {
     return {
-      playerName: "Surf_King",
-      gameName: "BattleBots Attack!",
-      maxPlayers: 4,
-      turnTimeLimit: 30000,
-      visibility: "public",
-      scoreLimit: 50
+      modalOpen: false,
+      data: {
+        playerName: "Surf_King"
+      }
     }
   },
   methods: {
     closePopup() {
-      VueEvent.fire('modal-close-new-game');
+      this.modalOpen = false
+    },
+    joinGame() {
+
+    }
+  },
+  template: `
+    <div :class="'modal' + (modalOpen ? ' is-active' : '')">
+      <div class="modal-background"></div>
+      <div class="modal-content box">
+        <div class="columns">
+          <div class="column">
+            <h2 class="title is-3">Join game</h2>
+          </div>
+        </div>
+        <div class="columns">
+          <div class="column">
+            <div class="field">
+              <label class="label">Player Name</label>
+              <div class="control">
+                <input v-model="data.playerName" class="input" type="text" placeholder="Surf_King">
+              </div>
+              <p class="help">Your player name in the game, max 12 characters, numbers and letters only.</p>
+            </div>
+          </div>
+        </div>
+        <div class="columns">
+          <div class="column">
+            <a v-on:click="joinGame()" class="button is-large is-primary">Join</a>
+          </div>
+        </div>
+      </div>
+      <button v-on:click="closePopup()" class="modal-close is-large" aria-label="close"></button>
+    </div>
+  `
+});
+
+let GameNewModal = Vue.component('GameNewModal', {
+  mounted() {
+    VueEvent.on('modal-open-new-game', data => {
+      this.modalOpen = true
+    });
+  },
+  data() {
+    return {
+      modalOpen: false,
+      data: {
+        playerName: "Surf_King",
+        gameName: "BattleBots Attack!",
+        maxPlayers: 4,
+        turnTimeLimit: 30000,
+        visibility: "public",
+        scoreLimit: 50
+      }
+    }
+  },
+  methods: {
+    closePopup() {
+      this.modalOpen = false
+    },
+    startGame() {
+      axios.post('http://127.0.0.1:3000/games/new', this.data).then(res => { 
+        Cookies.set(`ergo-player-${res.data.gameId}`, `${res.data.playerId}|${this.playerName}`)
+        this.$router.push(`/${res.data.gameId}`)
+        this.closePopup()
+      });
     }
   },
   template: `
@@ -31,7 +97,7 @@ let GameNewModal = Vue.component('GameNewModal', {
             <div class="field">
               <label class="label">Player Name</label>
               <div class="control">
-                <input v-model="playerName" class="input" type="text" placeholder="Surf_King">
+                <input v-model="data.playerName" class="input" type="text" placeholder="Surf_King">
               </div>
               <p class="help">Your player name in the game, max 12 characters, numbers and letters only.</p>
             </div>
@@ -40,7 +106,7 @@ let GameNewModal = Vue.component('GameNewModal', {
             <div class="field">
               <label class="label">Game Name</label>
               <div class="control">
-                <input v-model="gameName" class="input" type="text" placeholder="BattleBots_Attack">
+                <input v-model="data.gameName" class="input" type="text" placeholder="BattleBots_Attack">
               </div>
               <p class="help">All games need a name right?</p>
             </div>
@@ -52,7 +118,7 @@ let GameNewModal = Vue.component('GameNewModal', {
               <label class="label">Number of players</label>
               <div class="control">
                 <div class="select is-primary">
-                  <select v-model="maxPlayers">
+                  <select v-model="data.maxPlayers">
                     <option value="2">2 Players</option>
                     <option value="3">3 Players</option>
                     <option value="4" selected>4 Players</option>
@@ -67,7 +133,7 @@ let GameNewModal = Vue.component('GameNewModal', {
               <label class="label">Turn time limit</label>
               <div class="control">
                 <div class="select is-primary">
-                  <select v-model="turnTimeLimit">
+                  <select v-model="data.turnTimeLimit">
                     <option selected value="30000">30 seconds</option>
                     <option value="60000">60 seconds</option>
                     <option value="90000">90 seconds</option>
@@ -84,7 +150,7 @@ let GameNewModal = Vue.component('GameNewModal', {
               <label class="label">Visbility</label>
               <div class="control">
                 <div class="select is-primary">
-                  <select v-model="visibility">
+                  <select v-model="data.visibility">
                     <option selected value="public">Public</option>
                     <option value="private">Private</option>
                   </select>
@@ -98,7 +164,7 @@ let GameNewModal = Vue.component('GameNewModal', {
               <label class="label">Score Limit</label>
               <div class="control">
                 <div class="select is-primary">
-                <select v-model="scoreLimit">
+                <select v-model="data.scoreLimit">
                   <option value="50">50</option>
                   <option selected value="100">100</option>
                   <option value="250">250</option>
@@ -111,7 +177,7 @@ let GameNewModal = Vue.component('GameNewModal', {
         </div>
         <div class="columns">
           <div class="column">
-            <a class="button is-large is-primary">Start Game</a>
+            <a v-on:click="startGame()" class="button is-large is-primary">Start Game</a>
           </div>
         </div>
       </div>
@@ -127,26 +193,21 @@ let GameListPage = Vue.component('GameListPage', {
     }, 15000)
 
     this.refreshList();
-
-    VueEvent.on('modal-close-new-game', data => {
-      this.newGameModalOpen = false;
-    });
   },
   data() {
     return {
       games: [],
-      newGameModalOpen: false
     }
   },
   methods: {
     refreshList() {
       axios.get('http://127.0.0.1:3000/games/list').then(res => { this.games = res.data});
     },
-    openNewGameModal() {
-      this.newGameModalOpen = true;
+    openJoinGameModal(id) {
+      VueEvent.fire('modal-open-join-game', { gameId: id})
     },
-    joinGame(id) {
-      this.$router.push(`/games/${id}`)
+    openNewGameModal() {
+      VueEvent.fire('modal-open-new-game')
     }
   },
   template: `
@@ -166,29 +227,28 @@ let GameListPage = Vue.component('GameListPage', {
             <td>{{ game.name }}</td>
             <td>{{ game.type }}</td>
             <td>{{ game.currentPlayers }}</td>
-            <td><button v-on:click="joinGame(game.id)">Join</button></td>
+            <td><button v-on:click="openJoinGameModal(game.id)">Join</button></td>
           </tr>
         </tbody>
       </table>
-      <GameNewModal :modalOpen=newGameModalOpen />
     </div>
   `
 });
 
 let GameActivePage = Vue.component('GameActivePage', {
   mounted() {
-    axios.get(`/game/data/${this.$route.params.id}`).then(res => {
-      this.games = res.data;
+    axios.post(`http://127.0.0.1:3000/game/join`, { gameId: this.$route.params.gameId, playerId: 12345 }).then(res => {
+      this.game = res.data;
     });
   },
   data: function () {
     return {
-      count: 0
+      game: {}
     }
   },
   template: `
-    <div>Game ID: {{ $route.params.id }}
-      <div class="board">
+    <div>Game ID: {{ $route.params.gameId }}
+      <div class="board" v-text="game">
       </div>
       <div class="cards"> 
       </div>
@@ -205,22 +265,19 @@ const app = new Vue({
   router, 
   mounted() {
 
-    // Check for existing Cookie
-    let userIdCookie = Cookies.get('ergoUserId');
-    let userNameCookie = Cookies.get('ergoUserName');
+    VueEvent.on('modal-action', data => {
+      this.newGameModalOpen = false;
+    });
 
-    // load into store is present
-    if (userIdCookie) {
-      this.user.id = userIdCookie;
-      this.user.name = userNameCookie;
-    }
+    
+  },
+  methods: {
+
   },
   data() {
     return {
-      user: {
-        id: null,
-        name: null
-      }
+      newGameModalOpen: false,
+      joinGameModalOpen: false
     }
   },
   template: `
@@ -233,12 +290,6 @@ const app = new Vue({
                 <h1 class="title is-4">Ergo Online</h1>
                 <h2 class="subtitle is-6">Do you even exist? Prove it.</h2>
               </div>
-              <div class="column" v-if="user.id">
-                <div class="user-space">
-                  <p>{{ user.id }}</p>
-                  <i class="fas fa-user-circle fa-3x"></i>
-                </div>
-              </div>
             </div>
           </div>
         </div>
@@ -248,6 +299,8 @@ const app = new Vue({
           <router-view></router-view>
         </div>
       </section>
+      <GameNewModal />
+      <GameJoinModal />
     </div>
   `
 }).$mount('#ergoApp')
