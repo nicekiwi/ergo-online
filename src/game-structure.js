@@ -5,7 +5,7 @@ const alphabet = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ
 let gameStructure = {
 
   listGames(ctx, next) {
-    ctx.body = JSON.stringify(db.gameCollection.find({ visibility: 'public' }));
+    ctx.body = JSON.stringify(db.gameCollection.find({ 'settings.visibility': 'public', started: false }));
   },
 
   newGame(ctx, next) {
@@ -16,10 +16,10 @@ let gameStructure = {
 
     db.gameCollection.insert({ 
       id: gameId,
-      owner: playerId,
+      name: body.gameName,
+      ownerId: playerId,
       started: false,
       settings: {
-        name: body.gameName,
         visibility: body.visibility, 
         maxPlayers: body.maxPlayers,
         turnTimeLimit: body.turnTimeLimit,
@@ -78,14 +78,22 @@ let gameStructure = {
       ctx.body = JSON.stringify({ success: false, message: 'Game is full.' });
     }
     else if (game.players.length < game.settings.maxPlayers && !hasPlayer(playerId)) {
-      ctx.body = JSON.stringify({ success: true, message: 'You may join this game.' });
+
+      game.players.push({ id: playerId })
+      game.update()
+
+      ctx.body = JSON.stringify({ success: true, message: 'You may join this game.', game });
     }
     else if (hasPlayer(playerId)) {
-      ctx.body = JSON.stringify({ success: true, message: 'You are in this game.' });
+      ctx.body = JSON.stringify({ success: true, message: 'You are in this game.', game });
     }
     else {
       ctx.body = JSON.stringify({ success: false, message: 'How did you get here?' });
     }
+  },
+
+  addPlayer(gameId, player) {
+
   }
 }
 

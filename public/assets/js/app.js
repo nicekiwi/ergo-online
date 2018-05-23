@@ -208,6 +208,9 @@ let GameListPage = Vue.component('GameListPage', {
     },
     openNewGameModal() {
       VueEvent.fire('modal-open-new-game')
+    },
+    getOwnerName(gameObj) {
+      return gameObj.players.find(x => x.id === gameObj.ownerId).name;
     }
   },
   template: `
@@ -217,7 +220,7 @@ let GameListPage = Vue.component('GameListPage', {
         <thead>
           <tr>
             <th>Name</th>
-            <th>Type</th>
+            <th>Owner</th>
             <th>Players</th>
             <th>Status</th>
           </tr>
@@ -225,9 +228,9 @@ let GameListPage = Vue.component('GameListPage', {
         <tbody>
           <tr v-for="game in games">
             <td>{{ game.name }}</td>
-            <td>{{ game.type }}</td>
-            <td>{{ game.currentPlayers }}</td>
-            <td><button v-on:click="openJoinGameModal(game.id)">Join</button></td>
+            <td>{{ getOwnerName(game) }}</td>
+            <td>{{ game.players.length }}/{{ game.settings.maxPlayers }}</td>
+            <td><a class="button is-small is-link is-outlined" v-on:click="openJoinGameModal(game.id)">Join</a></td>
           </tr>
         </tbody>
       </table>
@@ -237,18 +240,28 @@ let GameListPage = Vue.component('GameListPage', {
 
 let GameActivePage = Vue.component('GameActivePage', {
   mounted() {
-    axios.post(`http://127.0.0.1:3000/game/join`, { gameId: this.$route.params.gameId, playerId: 12345 }).then(res => {
-      this.game = res.data;
+    this.game.id = this.$route.params.gameId;
+    this.player.id = Cookies.get(`ergo-player-${this.game.id}`).split('|')[0];
+    this.player.name = Cookies.get(`ergo-player-${this.game.id}`).split('|')[1];
+    axios.post(`http://127.0.0.1:3000/game/join`, { gameId: this.game.id, playerId: this.player.id }).then(res => {
+      this.game.data = res.data;
     });
   },
   data: function () {
     return {
-      game: {}
+      player: {
+        id: '',
+        name: ''
+      },
+      game: {
+        id: null,
+        data: {}
+      }
     }
   },
   template: `
-    <div>Game ID: {{ $route.params.gameId }}
-      <div class="board" v-text="game">
+    <div>Game ID: {{ game.id }}
+      <div class="board" v-text="game.data">
       </div>
       <div class="cards"> 
       </div>
