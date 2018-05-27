@@ -1,3 +1,6 @@
 {
-    "eslint.enable": false
+    "eslint.enable": false,
+    "git.enabled": false,
+    "editor.renderWhitespace": "all",
+    "editor.wordWrap": "on"
 }

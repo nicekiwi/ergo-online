@@ -1,25 +1,30 @@
 
-const Koa = require('koa');
-const bodyParser = require('koa-bodyparser');
-const Router = require('koa-router');
-const cors = require('@koa/cors');
+const Koa = require('koa')
+const bodyParser = require('koa-bodyparser')
+const Router = require('koa-router')
+const cors = require('@koa/cors')
+const port = process.env.port || 3000
 
-const generate = require('nanoid/generate');
-const alphabet = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ-';
+const app = new Koa()
+const router = new Router()
 
-const app = new Koa();
-const router = new Router();
+const gameController = require('./src/controllers/game')
 
-const gameStructure = require('./src/game-structure');
+router.get('/games/list', gameController.listGames)
+router.post('/games/new', gameController.newGame)
+router.post('/game/join', gameController.joinGame)
+router.post('/game/data', gameController.getData)
 
-router.get('/games/list', gameStructure.listGames);
-router.post('/games/new', gameStructure.newGame);
-router.post('/game/join', gameStructure.joinGame);
+router.post('/game/connect', gameController.playerConnect)
+router.post('/game/leave', gameController.leaveGame)
+router.post('/game/start', gameController.startGame)
 
 app
   .use(cors())
   .use(bodyParser())
   .use(router.routes())
-  .use(router.allowedMethods());
+  .use(router.allowedMethods())
 
-app.listen(3000);
+app.listen(port, event => {
+  console.log(`Listening on http://localhost:${port}`)
+})

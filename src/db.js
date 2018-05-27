@@ -2,9 +2,8 @@ const Loki = require('lokijs');
 
 const database = new Loki('ergo.db');
 
-let userCollection = database.addCollection('users');
-let gameCollection = database.addCollection('games');
+let gameCollection = database.addCollection('games', { indices: ['id'] });
 
 module.exports = {
-    database, userCollection, gameCollection
+    database, gameCollection
 }
