@@ -2,5 +2,6 @@
     "eslint.enable": false,
     "git.enabled": false,
     "editor.renderWhitespace": "all",
-    "editor.wordWrap": "on"
+    "editor.wordWrap": "on",
+    "editor.tabSize": 2
 }
