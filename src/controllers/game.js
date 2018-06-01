@@ -1,6 +1,7 @@
-const db = require('../db');
-const generate = require('nanoid/generate');
-const alphabet = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_';
+const fs = require('fs')
+const db = require('../db')
+const generate = require('nanoid/generate')
+const alphabet = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_'
 
 let hasPlayer = (game, id) => {
   return game.players.find(x => x.id === id);
@@ -197,6 +198,11 @@ let gameStructure = {
         ctx.body = JSON.stringify({ success: false })
       }
     }
+  },
+
+  spaFallback: async (ctx, next) => {
+    ctx.type = 'html'
+    ctx.body = fs.createReadStream('public/index.html')
   }
 }
 

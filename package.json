@@ -28,6 +28,7 @@
     "koa": "^2.5.1",
     "koa-bodyparser": "^4.2.1",
     "koa-router": "^7.4.0",
+    "koa-static": "^4.0.3",
     "lokijs": "^1.5.4",
     "nanoid": "^1.0.2",
     "vue": "^2.5.16",
@@ -35,7 +36,6 @@
   },
   "devDependencies": {
     "browser-sync": "^2.24.4",
-    "concat": "^1.0.3",
     "concurrently": "^3.5.1",
     "eslint": "^4.19.1",
     "eslint-config-standard": "^11.0.0",

@@ -21,13 +21,13 @@ let PageGameList = Vue.component('PageGameList', {
     methods: {
         init() {
           if (this.$parent.player.gameId) {
-            this.$router.push(`/${this.$parent.player.gameId}`)
+            this.$router.push(`/games/${this.$parent.player.gameId}`)
           } else {
             this.refreshList()
           }
         },
         refreshData() {
-          axios.get('/games/list').then(res => { this.games = res.data })
+          axios.get('/api/games/list').then(res => { this.games = res.data })
         },
         refreshList() {
           setTimeout(() => { if(this.updateData) this.refreshList() }, 3000)

@@ -25,15 +25,21 @@ let PageGameActive = Vue.component('PageGameActive', {
     methods: {
       init() {
         if (this.$parent.player.gameId === null) {
+
+          VueEvent.fire('modal-open-error', { 
+            title: 'Game not found',
+            message: 'Awkward, we can\'t find that game..'
+          })
+
           this.$router.push(`/`)
         } else if (this.$parent.player.gameId !== this.$route.params.gameId) {
-          this.$router.push(`/${this.$parent.player.gameId}`)
+          this.$router.push(`/games/${this.$parent.player.gameId}`)
         } else {
           this.updateGame()
         }
       },
       leaveGame() {
-          axios.post(`/game/leave`, {
+          axios.post(`/api/game/leave`, {
               gameId: this.$parent.player.gameId,
               playerId: this.$parent.player.id
           }).then(res => {
@@ -43,7 +49,7 @@ let PageGameActive = Vue.component('PageGameActive', {
       },
       startGame() {
         this.isStarting = true
-        axios.post(`/game/start`, {
+        axios.post(`/api/game/start`, {
           gameId: this.$parent.player.gameId,
           playerId: this.$parent.player.id
         }).then(res => {
@@ -57,7 +63,7 @@ let PageGameActive = Vue.component('PageGameActive', {
         })
       },
       updateGameData() {
-        axios.post(`/game/data`, {
+        axios.post(`/api/game/data`, {
           gameId: this.$parent.player.gameId,
           playerId: this.$parent.player.id
         }).then(res => {

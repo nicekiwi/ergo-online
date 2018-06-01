@@ -27,7 +27,7 @@ let ModalNewGame = Vue.component('ModalNewGame', {
           this.resetData()
         },
         startGame() {
-            axios.post('/games/new', this.formData).then(res => {
+            axios.post('/api/games/new', this.formData).then(res => {
 
                 // update cookie and playerDate
                 this.$parent.updatePlayerData({ 
@@ -36,7 +36,7 @@ let ModalNewGame = Vue.component('ModalNewGame', {
                   name: this.formData.playerName
                 })
 
-                this.$router.push(`/${res.data.gameId}`)
+                this.$router.push(`/games/${res.data.gameId}`)
                 this.closePopup()
             });
         }

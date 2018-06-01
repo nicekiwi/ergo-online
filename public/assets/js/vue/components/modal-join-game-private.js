@@ -23,29 +23,24 @@ let ModalJoinGamePrivate = Vue.component('ModalJoinGamePrivate', {
         this.resetData()
       },
       joinGame() {
-        axios.post('/game/join', { 
+        axios.post('/api/game/join', { 
           gameId: this.formData.gameId,
           playerName: this.formData.playerName 
         }).then(res => {
           if (res.data.success) {
-  
-            // set play and game cookie
             this.$parent.updatePlayerData({
               id: res.data.playerId,
               name: this.formData.playerName,
               gameId: this.formData.gameId
             })
-  
-            this.closePopup();
-  
-            this.$router.push(`/${this.formData.gameId}`)
+            this.$router.push(`/games/${this.formData.gameId}`)
           } else {
-            this.modalOpen = false
             VueEvent.fire('modal-open-error', { 
               title: res.data.title,
               message: res.data.message
             })
           }
+          this.closePopup()
         })
       }
     },

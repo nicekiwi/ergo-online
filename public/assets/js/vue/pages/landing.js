@@ -10,7 +10,7 @@ let PageLanding = Vue.component('PageLanding', {
     methods: {
       init() {
         if (this.$parent.player.gameId) {
-          this.$router.push(`/${this.$parent.player.gameId}`)
+          this.$router.push(`/games/${this.$parent.player.gameId}`)
         }
       },
       openJoinPrivateGameModal() {

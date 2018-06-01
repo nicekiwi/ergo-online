@@ -1,8 +1,10 @@
 const router = new VueRouter({
+  mode: 'history',
   routes: [
     { path: '/', component: PageLanding },
     { path: '/games', component: PageGameList },
-    { path: '/:gameId', component: PageGameActive }
+    { path: '/games/:gameId', component: PageGameActive },
+    { path: '*', component: PageNotFound }
   ]
 })
 
@@ -10,7 +12,7 @@ const router = new VueRouter({
 router.beforeEach((to, from, next) => {
   next(vm => {
     if (vm.$parent.player.gameId && vm.$parent.player.id) {
-      vm.$router.push(`/${vm.$parent.player.gameId}`)
+      vm.$router.push(`/games/${vm.$parent.player.gameId}`)
     }
   })
 })
@@ -34,27 +36,24 @@ const app = new Vue({
       // check if player is in game that has not ended
       if (this.player.id !== null) {
         axios
-          .post('/game/connect', { 
+          .post('/api/game/connect', { 
             gameId: this.player.gameId, 
             playerId: this.player.id 
           })
           .then(res => {
             this.isLoaded = true
-
             if (res.data.success) {
-              this.$router.push(`/${this.player.gameId}`)
-            } else {
-              this.$router.push(`/`)
+              this.$router.push(`/games/${this.player.gameId}`)
             }
           })
           // todo; fix this
           .catch(e => console.error)
       } else {
         this.isLoaded = true
-        this.$router.push(`/`)
       }
     },
     updatePlayerData(data) {
+
       if (data && data.gameId) {
         this.player.id = data.id
         this.player.name = data.name
