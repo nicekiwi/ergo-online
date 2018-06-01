@@ -16,6 +16,7 @@ let PageGameActive = Vue.component('PageGameActive', {
       return {
         game: {},
         isStarting: false,
+        isJoining: false,
         updateData: true
       }
     },
@@ -24,16 +25,17 @@ let PageGameActive = Vue.component('PageGameActive', {
     },
     methods: {
       init() {
-        if (this.$parent.player.gameId === null) {
+        let paramGameId = this.$route.params.gameId
+        let userGameId = this.$parent.player.gameId
 
+        if (userGameId === null) {
           VueEvent.fire('modal-open-error', { 
-            title: 'Game not found',
-            message: 'Awkward, we can\'t find that game..'
+            title: 'Unable to join',
+            message: 'Please use the game browser to check if game exists and join it there.'
           })
-
-          this.$router.push(`/`)
-        } else if (this.$parent.player.gameId !== this.$route.params.gameId) {
-          this.$router.push(`/games/${this.$parent.player.gameId}`)
+          this.$router.push(`/games`)
+        } else if (userGameId !== paramGameId) {
+          this.$router.push(`/games/${userGameId}`)
         } else {
           this.updateGame()
         }
@@ -89,6 +91,10 @@ let PageGameActive = Vue.component('PageGameActive', {
     <div class="content">
         <h1 class="title" v-text="game.name"></h1>
         <h2 class="subtitle">{{ game.ownerName }}'s game</h2>
+
+        <div v-if="game.accessKey">
+          <pre v-text="game.accessKey"></pre>
+        </div>
 
         <a class="button is-danger" v-on:click="leaveGame()">Leave Game</a>
 

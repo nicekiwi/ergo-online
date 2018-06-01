@@ -2,6 +2,7 @@ const fs = require('fs')
 const db = require('../db')
 const generate = require('nanoid/generate')
 const alphabet = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_'
+const passabet = '0123456789'
 
 let hasPlayer = (game, id) => {
   return game.players.find(x => x.id === id);
@@ -33,20 +34,18 @@ let gameStructure = {
   },
 
   listGames(ctx, next) {
-    let games = db.gameCollection.find({ 
-      'settings.visibility': 'public', 
-      hasStarted: false 
-    });
-
+    let games = db.gameCollection.find();
     let sanitisedGames = []
 
     games.forEach(game => {
       sanitisedGames.push({
         id: game.id,
         name: game.name,
-        ownerName: game.owner.name,
+        access: game.settings.access,
         players: game.players.length,
-        maxPlayers: game.settings.maxPlayers
+        ownerName: game.owner.name,
+        maxPlayers: game.settings.maxPlayers,
+        hasStarted: game.hasStarted
       })
     })
 
@@ -69,7 +68,8 @@ let gameStructure = {
       hasStarted: false,
       hasEnded: false,
       settings: {
-        visibility: body.visibility, 
+        access: body.access,
+        accessKey: generate(passabet, 8),
         maxPlayers: body.maxPlayers,
         turnTimeLimit: body.turnTimeLimit,
         scoreLimit: body.scoreLimit
@@ -109,11 +109,25 @@ let gameStructure = {
     let gameId = body.gameId;
     let game = db.gameCollection.findOne({ id: gameId });
 
+    let hasAccess = game => {
+      return game.settings.accessKey === body.accessKey
+    }
+
+    let isPrivate = game => {
+      return game.settings.access === 'private'
+    }
+
     if(!game) {
       ctx.body = JSON.stringify({ 
         success: false, 
         title: 'Game not found', 
         message: 'Awkward, we can\'t find this game.' 
+      })
+    } else if(isPrivate(game) && !hasAccess(game)) {
+      ctx.body = JSON.stringify({ 
+        success: false, 
+        title: 'Incorrect Access Key', 
+        message: 'Sharron, you got a lot of that wrong (means you can\'t join this game).' 
       })
     } else if(isFull(game) && !hasPlayer(game, playerId)) {
       ctx.body = JSON.stringify({ 
@@ -137,13 +151,14 @@ let gameStructure = {
 
   getData(ctx, next) {
     let body = ctx.request.body;
-    let game = db.gameCollection.findOne({ id: body.gameId, hasEnded: false });
+    let game = db.gameCollection.findOne({ id: body.gameId });
 
     if(game && hasPlayer(game, body.playerId)) {
 
       let sanitisedData = {
         id: body.gameId,
         name: game.name,
+        access: game.access,
         ownerName: game.owner.name,
         hasStarted: game.hasStarted,
         players: []
@@ -155,6 +170,7 @@ let gameStructure = {
 
       if (body.playerId === game.owner.id) {
         sanitisedData.ownerId = game.owner.id
+        sanitisedData.accessKey = game.settings.accessKey
       }
 
       ctx.body = JSON.stringify({ success: true, game: sanitisedData });

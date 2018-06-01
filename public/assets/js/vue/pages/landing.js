@@ -12,9 +12,6 @@ let PageLanding = Vue.component('PageLanding', {
         if (this.$parent.player.gameId) {
           this.$router.push(`/games/${this.$parent.player.gameId}`)
         }
-      },
-      openJoinPrivateGameModal() {
-        VueEvent.fire('modal-open-join-private-game')
       }
     },
     template: `
@@ -28,7 +25,7 @@ let PageLanding = Vue.component('PageLanding', {
         ----------------------
       </p>
       <p>
-        <a class="button is-small" v-on:click="openJoinPrivateGameModal()">Join Private Game</a>
+        <a class="button is-small" v-on:click="">How to play</a>
       </p>
     </div>
   `

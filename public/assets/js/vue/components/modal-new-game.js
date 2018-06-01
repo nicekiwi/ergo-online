@@ -19,7 +19,7 @@ let ModalNewGame = Vue.component('ModalNewGame', {
             gameName: "BattleBots Attack!",
             maxPlayers: 4,
             turnTimeLimit: 30000,
-            visibility: "public",
+            access: "public",
             scoreLimit: 50
           }
         },
@@ -53,7 +53,7 @@ let ModalNewGame = Vue.component('ModalNewGame', {
         <div class="columns">
           <div class="column">
             <div class="field">
-              <label class="label">Player Name</label>
+              <label class="label">Player name</label>
               <div class="control">
                 <input v-model="formData.playerName" class="input" type="text" placeholder="Surf_King">
               </div>
@@ -62,7 +62,7 @@ let ModalNewGame = Vue.component('ModalNewGame', {
           </div>
           <div class="column">
             <div class="field">
-              <label class="label">Game Name</label>
+              <label class="label">Game name</label>
               <div class="control">
                 <input v-model="formData.gameName" class="input" type="text" placeholder="BattleBots_Attack">
               </div>
@@ -105,27 +105,27 @@ let ModalNewGame = Vue.component('ModalNewGame', {
         <div class="columns">
           <div class="column">
             <div class="field">
-              <label class="label">Visbility</label>
+              <label class="label">Game access</label>
               <div class="control">
                 <div class="select is-primary">
-                  <select v-model="formData.visibility">
+                  <select v-model="formData.access">
                     <option selected value="public">Public</option>
                     <option value="private">Private</option>
                   </select>
                 </div>
               </div>
-              <p class="help">Private Games do not display in the Game Browser and can only be joined by those you share the link with.</p>
+              <p class="help">Anyone can join a public game. Private games require an access key to join.</p>
             </div>
           </div>
           <div class="column">
             <div class="field">
-              <label class="label">Score Limit</label>
+              <label class="label">Score limit</label>
               <div class="control">
                 <div class="select is-primary">
                 <select v-model="formData.scoreLimit">
-                  <option value="50">50</option>
-                  <option selected value="100">100</option>
-                  <option value="250">250</option>
+                  <option value="50">50 points</option>
+                  <option selected value="100">100 points</option>
+                  <option value="250">250 points</option>
                 </select>
               </div>
               </div>

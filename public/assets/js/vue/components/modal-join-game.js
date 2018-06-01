@@ -18,7 +18,8 @@ let ModalJoinGame = Vue.component('ModalJoinGame', {
       this.modalOpen = false
       this.game = {}
       this.formData = {
-        playerName: 'Chaos_Servant'
+        playerName: 'Chaos_Servant',
+        accessKey: ''
       }
     },
     closePopup() {
@@ -27,7 +28,8 @@ let ModalJoinGame = Vue.component('ModalJoinGame', {
     joinGame() {
       axios.post('/api/game/join', { 
         gameId: this.game.id,
-        playerName: this.formData.playerName 
+        playerName: this.formData.playerName,
+        accessKey: this.formData.accessKey
       }).then(res => {
         if (res.data.success) {
           this.$parent.updatePlayerData({
@@ -44,6 +46,11 @@ let ModalJoinGame = Vue.component('ModalJoinGame', {
         }
         this.closePopup()
       })
+    }
+  },
+  computed: {
+    isPrivate() {
+      return this.game.access === 'private'
     }
   },
   template: `
@@ -64,6 +71,14 @@ let ModalJoinGame = Vue.component('ModalJoinGame', {
                 <input v-model="formData.playerName" class="input" type="text" placeholder="Surf_King">
               </div>
               <p class="help">Your player name in the game, max 12 characters, numbers and letters only.</p>
+            </div>
+          </div>
+          <div class="column" v-if="isPrivate">
+            <div class="field">
+              <label class="label">Access Key</label>
+              <div class="control">
+                <input v-model="formData.accessKey" class="input" type="text">
+              </div>
             </div>
           </div>
         </div>

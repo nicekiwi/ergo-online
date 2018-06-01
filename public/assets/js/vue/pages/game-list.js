@@ -34,26 +34,27 @@ let PageGameList = Vue.component('PageGameList', {
           this.refreshData()
         },
         openJoinGameModal(game) {
-            VueEvent.fire('modal-open-join-game', game)
-        },
-        openJoinPrivateGameModal() {
-            VueEvent.fire('modal-open-join-private-game')
+          VueEvent.fire('modal-open-join-game', game)
         },
         openNewGameModal() {
             VueEvent.fire('modal-open-new-game')
+        },
+        isPrivate(access) {
+          return access === 'private'
         }
     },
     template: `
     <div>
       <a class="button is-link" v-on:click="openNewGameModal()">New Game</a>
-      <a class="button" v-on:click="openJoinPrivateGameModal()">Join Private Game</a>
       <table class="table">
         <thead>
           <tr>
             <th>Name</th>
             <th>Owner</th>
             <th>Players</th>
+            <th>Access</th>
             <th>Status</th>
+            <th></th>
           </tr>
         </thead>
         <tbody>
@@ -61,7 +62,11 @@ let PageGameList = Vue.component('PageGameList', {
             <td>{{ game.name }}</td>
             <td>{{ game.ownerName }}</td>
             <td>{{ game.players }}/{{ game.maxPlayers }}</td>
-            <td><a class="button is-small is-link is-outlined" v-on:click="openJoinGameModal(game)">Join</a></td>
+            <td>{{ isPrivate(game.access) ? 'Private' : 'Public' }}</td>
+            <td>{{ game.hasStarted ? 'In Progress' : 'Open' }}</td>
+            <td>
+              <a v-if="!game.hasStarted" class="button is-small is-link is-outlined" v-on:click="openJoinGameModal(game)">Join</a>
+            </td>
           </tr>
         </tbody>
       </table>
