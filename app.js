@@ -3,7 +3,7 @@ const Koa = require('koa')
 const bodyParser = require('koa-bodyparser')
 const Router = require('koa-router')
 const cors = require('@koa/cors')
-const port = process.env.port || 3000
+const port = process.env.PORT || 3000
 
 const app = new Koa()
 const router = new Router()

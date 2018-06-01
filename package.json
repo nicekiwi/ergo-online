@@ -5,8 +5,8 @@
   "author": "Ezra Sharp <ezra.sharp@nice.kiwi>",
   "private": true,
   "engines": {
-    "node": ">= 6.0.0",
-    "npm": ">= 3.0.0"
+    "node": "8.11.2",
+    "npm": "6.1.0"
   },
   "scripts": {
     "stylus": "stylus -w ./public/assets/stylus/app.styl -o ./public/assets/css",
