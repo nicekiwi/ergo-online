@@ -71,7 +71,7 @@ let ModalJoinGame = Vue.component('ModalJoinGame', {
         </div>
         <div class="columns">
           <div class="column">
-            <a v-on:click="joinGame()" class="button is-large is-primary">Join</a>
+            <a v-on:click="joinGame()" class="button is-large is-primary">Join Game</a>
           </div>
         </div>
       </div>
