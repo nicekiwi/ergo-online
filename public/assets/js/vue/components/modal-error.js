@@ -1,4 +1,4 @@
-let GameErrorModal = Vue.component('GameErrorModal', {
+let ModalError = Vue.component('ModalError', {
     mounted () {
       VueEvent.on('modal-open-error', data => {
         this.modalOpen = true

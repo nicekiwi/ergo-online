@@ -1,7 +1,8 @@
 const router = new VueRouter({
   routes: [
-    { path: '/', component: GameListPage },
-    { path: '/:gameId', component: GameActivePage }
+    { path: '/', component: PageLanding },
+    { path: '/games', component: PageGameList },
+    { path: '/:gameId', component: PageGameActive }
   ]
 })
 
@@ -41,7 +42,7 @@ const app = new Vue({
             this.isLoaded = true
 
             if (res.data.success) {
-              this.$router.push(`/${gameId}`)
+              this.$router.push(`/${this.player.gameId}`)
             } else {
               this.$router.push(`/`)
             }
@@ -80,8 +81,15 @@ const app = new Vue({
       if (val) VueEvent.fire('app-ready')
     }
   },
+  computed: {
+    isLandingPage() {
+      return this.$route.path === '/'
+    }
+  },
   data() {
     return {
+      title: 'Ergo Online',
+      subTitle: 'Do you event exist? Prove it!',
       cookieName: 'ergo-player',
       player: {
         id: null,
@@ -93,26 +101,40 @@ const app = new Vue({
   },
   template: `
     <div>
-      <section class="hero is-info">
+      <section v-if="isLandingPage" class="hero is-info is-medium">
         <div class="hero-body">
-          <div class="container">
+          <div class="container has-text-centered">
             <div class="columns">
               <div class="column">
-                <h1 class="title is-4">Ergo Online</h1>
-                <h2 class="subtitle is-6">Do you even exist? Prove it.</h2>
+                <h1 class="title" v-text="title"></h1>
+                <h2 class="subtitle" v-text="subTitle"></h2>
               </div>
             </div>
           </div>
         </div>
       </section>
+      <section v-else class="hero is-info">
+        <div class="hero-body">
+          <div class="container">
+            <div class="columns">
+              <div class="column">
+                <h1 class="title is-4" v-text="title"></h1>
+                <h2 class="subtitle is-6" v-text="subTitle"></h2>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      
       <section class="section">
         <div class="container">
           <router-view></router-view>
         </div>
       </section>
-      <GameNewModal />
-      <GameJoinModal />
-      <GameErrorModal />
+      <ModalNewGame />
+      <ModalJoinGame />
+      <ModalJoinGamePrivate />
+      <ModalError />
     </div>
   `
 }).$mount('#ergoApp')

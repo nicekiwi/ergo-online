@@ -11,7 +11,7 @@
   "scripts": {
     "stylus": "stylus -w ./public/assets/stylus/app.styl -o ./public/assets/css",
     "server-back": "nodemon --watch ./src app.js",
-    "server-front": "http-server ./public",
+    "server-front": "browser-sync start --server \"public\" --files \"public\" --port 8080 --no-ghost-mode --logLevel \"silent\"",
     "start": "concurrently --kill-others --names \"STYLUS,SERVER,FRONT\" \"npm run stylus\" \"npm run server-back\" \"npm run server-front\""
   },
   "browserslist": [
@@ -34,6 +34,8 @@
     "vue-router": "^3.0.1"
   },
   "devDependencies": {
+    "browser-sync": "^2.24.4",
+    "concat": "^1.0.3",
     "concurrently": "^3.5.1",
     "eslint": "^4.19.1",
     "eslint-config-standard": "^11.0.0",

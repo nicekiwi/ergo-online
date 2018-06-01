@@ -1,32 +1,45 @@
-let GameJoinModal = Vue.component('GameJoinModal', {
+let ModalJoinGame = Vue.component('ModalJoinGame', {
   mounted () {
     VueEvent.on('modal-open-join-game', game => {
-      this.game = game
       this.modalOpen = true
+      this.game = game
     });
   },
   data() {
     return {
       modalOpen: false,
       game: {},
-      data: {
-        playerName: 'Surf_King'
-      }
+      formData: {}
     }
   },
   methods: {
-    closePopup() {
+    resetData() {
       this.modalOpen = false
+      this.game = {}
+      this.formData = {
+        playerName: 'Chaos_Servant'
+      }
+    },
+    closePopup() {
+      this.resetData()
     },
     joinGame() {
       axios.post('/game/join', { 
         gameId: this.game.id,
-        playerName: this.data.playerName 
+        playerName: this.formData.playerName 
       }).then(res => {
         if (res.data.success) {
+          this.closePopup()
+
+          // set play and game cookie
+          this.$parent.updatePlayerData({
+            id: res.data.playerId,
+            name: this.formData.playerName,
+            gameId: this.game.id
+          })
+
           this.$router.push(`/${this.game.id}`)
         } else {
-          this.modalOpen = false
           VueEvent.fire('modal-open-error', { 
             title: res.data.title,
             message: res.data.message
@@ -50,7 +63,7 @@ let GameJoinModal = Vue.component('GameJoinModal', {
             <div class="field">
               <label class="label">Player Name</label>
               <div class="control">
-                <input v-model="data.playerName" class="input" type="text" placeholder="Surf_King">
+                <input v-model="formData.playerName" class="input" type="text" placeholder="Surf_King">
               </div>
               <p class="help">Your player name in the game, max 12 characters, numbers and letters only.</p>
             </div>

@@ -1,4 +1,4 @@
-let GameListPage = Vue.component('GameListPage', {
+let PageGameList = Vue.component('PageGameList', {
     mounted() {
       if (!this.$parent.isLoaded) {
         VueEvent.on('app-ready', this.init)
@@ -6,29 +6,38 @@ let GameListPage = Vue.component('GameListPage', {
         this.init()
       }
     },
+    beforeMount() {
+      this.updateData = true
+    },
+    beforeDestroy() {
+      this.updateData = false
+    },
     data() {
-        return {
-            games: [],
-        }
+      return {
+        games: [],
+        updateData: true
+      }
     },
     methods: {
         init() {
           if (this.$parent.player.gameId) {
             this.$router.push(`/${this.$parent.player.gameId}`)
           } else {
-            setInterval(() => {
-                this.refreshList()
-            }, 15000)
-
-            this.refreshList();
+            this.refreshList()
           }
         },
+        refreshData() {
+          axios.get('/games/list').then(res => { this.games = res.data })
+        },
         refreshList() {
-            // first make check if player is already in a game, if so take them to it directly. force them to manually leave that game before being able to start or join another one.
-            axios.get('/games/list').then(res => { this.games = res.data });
+          setTimeout(() => { if(this.updateData) this.refreshList() }, 3000)
+          this.refreshData()
         },
         openJoinGameModal(game) {
             VueEvent.fire('modal-open-join-game', game)
+        },
+        openJoinPrivateGameModal() {
+            VueEvent.fire('modal-open-join-private-game')
         },
         openNewGameModal() {
             VueEvent.fire('modal-open-new-game')
@@ -36,7 +45,8 @@ let GameListPage = Vue.component('GameListPage', {
     },
     template: `
     <div>
-      <button class="button is-link" v-on:click="openNewGameModal()">New Game</button>
+      <a class="button is-link" v-on:click="openNewGameModal()">New Game</a>
+      <a class="button" v-on:click="openJoinPrivateGameModal()">Join Private Game</a>
       <table class="table">
         <thead>
           <tr>

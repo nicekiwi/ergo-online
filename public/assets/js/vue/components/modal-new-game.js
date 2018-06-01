@@ -1,34 +1,39 @@
-let GameNewModal = Vue.component('GameNewModal', {
+let ModalNewGame = Vue.component('ModalNewGame', {
     mounted() {
-        VueEvent.on('modal-open-new-game', data => {
-            this.modalOpen = true
-        });
+      this.resetData()
+      VueEvent.on('modal-open-new-game', data => {
+        this.modalOpen = true
+      })
     },
     data() {
-        return {
-            modalOpen: false,
-            data: {
-                playerName: "Surf_King",
-                gameName: "BattleBots Attack!",
-                maxPlayers: 4,
-                turnTimeLimit: 30000,
-                visibility: "public",
-                scoreLimit: 50
-            }
-        }
+      return {
+        modalOpen: false,
+        formData: {}
+      }
     },
     methods: {
+        resetData() {
+          this.modalOpen = false
+          this.formData = {
+            playerName: "Surf_King",
+            gameName: "BattleBots Attack!",
+            maxPlayers: 4,
+            turnTimeLimit: 30000,
+            visibility: "public",
+            scoreLimit: 50
+          }
+        },
         closePopup() {
-            this.modalOpen = false
+          this.resetData()
         },
         startGame() {
-            axios.post('/games/new', this.data).then(res => {
+            axios.post('/games/new', this.formData).then(res => {
 
                 // update cookie and playerDate
                 this.$parent.updatePlayerData({ 
                   gameId: res.data.gameId, 
                   id: res.data.playerId, 
-                  name: this.data.playerName
+                  name: this.formData.playerName
                 })
 
                 this.$router.push(`/${res.data.gameId}`)
@@ -50,7 +55,7 @@ let GameNewModal = Vue.component('GameNewModal', {
             <div class="field">
               <label class="label">Player Name</label>
               <div class="control">
-                <input v-model="data.playerName" class="input" type="text" placeholder="Surf_King">
+                <input v-model="formData.playerName" class="input" type="text" placeholder="Surf_King">
               </div>
               <p class="help">Your player name in the game, max 12 characters, numbers and letters only.</p>
             </div>
@@ -59,7 +64,7 @@ let GameNewModal = Vue.component('GameNewModal', {
             <div class="field">
               <label class="label">Game Name</label>
               <div class="control">
-                <input v-model="data.gameName" class="input" type="text" placeholder="BattleBots_Attack">
+                <input v-model="formData.gameName" class="input" type="text" placeholder="BattleBots_Attack">
               </div>
               <p class="help">All games need a name right?</p>
             </div>
@@ -71,7 +76,7 @@ let GameNewModal = Vue.component('GameNewModal', {
               <label class="label">Number of players</label>
               <div class="control">
                 <div class="select is-primary">
-                  <select v-model="data.maxPlayers">
+                  <select v-model="formData.maxPlayers">
                     <option value="2">2 Players</option>
                     <option value="3">3 Players</option>
                     <option value="4" selected>4 Players</option>
@@ -86,7 +91,7 @@ let GameNewModal = Vue.component('GameNewModal', {
               <label class="label">Turn time limit</label>
               <div class="control">
                 <div class="select is-primary">
-                  <select v-model="data.turnTimeLimit">
+                  <select v-model="formData.turnTimeLimit">
                     <option selected value="30000">30 seconds</option>
                     <option value="60000">60 seconds</option>
                     <option value="90000">90 seconds</option>
@@ -103,7 +108,7 @@ let GameNewModal = Vue.component('GameNewModal', {
               <label class="label">Visbility</label>
               <div class="control">
                 <div class="select is-primary">
-                  <select v-model="data.visibility">
+                  <select v-model="formData.visibility">
                     <option selected value="public">Public</option>
                     <option value="private">Private</option>
                   </select>
@@ -117,7 +122,7 @@ let GameNewModal = Vue.component('GameNewModal', {
               <label class="label">Score Limit</label>
               <div class="control">
                 <div class="select is-primary">
-                <select v-model="data.scoreLimit">
+                <select v-model="formData.scoreLimit">
                   <option value="50">50</option>
                   <option selected value="100">100</option>
                   <option value="250">250</option>

@@ -124,7 +124,7 @@ let gameStructure = {
       // Add player to game
       game.players.push({ id: playerId, name: playerName })
       db.gameCollection.update(game)
-      ctx.body = JSON.stringify({ success: true });
+      ctx.body = JSON.stringify({ success: true, playerId });
     } else {
       ctx.body = JSON.stringify({ 
         success: false, 
@@ -156,7 +156,7 @@ let gameStructure = {
         sanitisedData.ownerId = game.owner.id
       }
 
-      ctx.body = JSON.stringify({ success: true, data: sanitisedData });
+      ctx.body = JSON.stringify({ success: true, game: sanitisedData });
     } else {
       ctx.body = JSON.stringify({ success: false })
     }
@@ -165,20 +165,37 @@ let gameStructure = {
   leaveGame(ctx, next) {
     let body = ctx.request.body
     let game = db.gameCollection.findOne({ id: body.gameId })
-    
-    game.players.splice(game.players.findIndex(x => x.id === body.playerId), 1)
-    db.gameCollection.update(game)
 
-    if(!hasPlayer(game, body.playerId)) {
-
-      // if player was the only one left, remove the game
-      if (!game.players.length) {
-        db.gameCollection.remove(game)
-      }
-
+    // check game and player ID exists and player is in game
+    if (!game || !body.playerId || !hasPlayer(game, body.playerId)) {
       ctx.body = JSON.stringify({ success: true })
-    } else {
-      ctx.body = JSON.stringify({ success: false })
+    }
+
+    // Remove game if player is the last player
+    else if (game.players.length === 1) {
+      db.gameCollection.remove(game)
+      ctx.body = JSON.stringify({ success: true })
+    }
+
+    else {
+
+      // get index of player
+      let playerIndex = game.players.findIndex(x => x.id === body.playerId)
+
+      // remove player from game
+      game.players.splice(playerIndex, 1)
+
+      // move game ownership to the next player at random
+      game.owner.id = game.players[0].id;
+      game.owner.name = game.players[0].name;
+      db.gameCollection.update(game);
+
+      // verify the removal actually worked
+      if (!hasPlayer(game, body.playerId)) {
+        ctx.body = JSON.stringify({ success: true })
+      } else {
+        ctx.body = JSON.stringify({ success: false })
+      }
     }
   }
 }
