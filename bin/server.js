@@ -1,6 +1,6 @@
-
 const Koa = require('koa')
 const bodyParser = require('koa-bodyparser')
+const logger = require("koa-logger")
 const Router = require('koa-router')
 const cors = require('@koa/cors')
 const serve = require('koa-static')
@@ -8,6 +8,12 @@ const PORT = process.env.PORT || 3000
 
 const app = new Koa()
 const router = new Router()
+const server = require("http").createServer(app.callback())
+const io = require("socket.io")(server)
+
+io.on('connection', socket => {
+  console.log('a user connected')
+})
 
 const gameController = require('../src/controllers/game')
 
@@ -23,12 +29,13 @@ router.post('/api/game/start', gameController.startGame)
 router.get('*', gameController.spaFallback)
 
 app
+  .use(logger())
   .use(cors())
   .use(bodyParser())
   .use(serve('public'))
   .use(router.routes())
   .use(router.allowedMethods())
 
-app.listen(PORT, event => {
+server.listen(PORT, event => {
   console.log(`Listening on http://localhost:${PORT}`)
 })

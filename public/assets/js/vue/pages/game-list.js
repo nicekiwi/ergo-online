@@ -50,7 +50,7 @@ let PageGameList = Vue.component('PageGameList', {
         <thead>
           <tr>
             <th>Name</th>
-            <th>Owner</th>
+            <th>Host</th>
             <th>Players</th>
             <th>Access</th>
             <th>Status</th>
@@ -60,7 +60,7 @@ let PageGameList = Vue.component('PageGameList', {
         <tbody>
           <tr v-for="(game, index) in games" :key=index>
             <td>{{ game.name }}</td>
-            <td>{{ game.ownerName }}</td>
+            <td>{{ game.host.name }}</td>
             <td>{{ game.players }}/{{ game.maxPlayers }}</td>
             <td>{{ isPrivate(game.access) ? 'Private' : 'Public' }}</td>
             <td>{{ game.hasStarted ? 'In Progress' : 'Open' }}</td>

@@ -1,5 +1,6 @@
 const fs = require('fs')
 const db = require('../db')
+const logicController = require('./logic')
 const generate = require('nanoid/generate')
 const alphabet = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_'
 const passabet = '0123456789'
@@ -43,7 +44,7 @@ let gameStructure = {
         name: game.name,
         access: game.settings.access,
         players: game.players.length,
-        ownerName: game.owner.name,
+        hostName: game.host.name,
         maxPlayers: game.settings.maxPlayers,
         hasStarted: game.hasStarted
       })
@@ -61,7 +62,7 @@ let gameStructure = {
     db.gameCollection.insert({ 
       id: gameId,
       name: body.gameName,
-      owner: {
+      host: {
         id: playerId,
         name: body.playerName
       },
@@ -77,7 +78,19 @@ let gameStructure = {
       players: [{ 
         id: playerId, 
         name: body.playerName 
-      }]
+      }],
+      logic: {
+        drawPile: [],
+        discardPile: [],
+        round: 1,
+        proof: { valid: false },
+        premises: [
+          { valid: false, cards: [] },
+          { valid: false, cards: [] },
+          { valid: false, cards: [] },
+          { valid: false, cards: [] }
+        ]
+      }
     });
     
     ctx.body = JSON.stringify({ gameId, playerId })
@@ -90,10 +103,12 @@ let gameStructure = {
     let gameId = body.gameId;
     let game = db.gameCollection.findOne({ id: gameId });
 
-    if (playerId === game.owner.id) {
+    if (playerId === game.host.id) {
 
       game.hasStarted = true
       db.gameCollection.update(game)
+
+      logicController.initGame(gameId)
 
       ctx.body = JSON.stringify({ success: true })
     } else {
@@ -155,22 +170,25 @@ let gameStructure = {
 
     if(game && hasPlayer(game, body.playerId)) {
 
+      let meIndex = game.players.findIndex(x => x.id === body.playerId)
+
       let sanitisedData = {
         id: body.gameId,
         name: game.name,
-        access: game.access,
-        ownerName: game.owner.name,
+        host: { id: null, name: game.host.name },
         hasStarted: game.hasStarted,
-        players: []
+        hasEnded: game.hasEnded,
+        settings: game.settings,
+        players: game.players,
+        me: game.players[meIndex],
+        premises: game.logic.premises
       }
 
-      game.players.forEach(player => {
-        sanitisedData.players.push({ name: player.name })
-      })
-
-      if (body.playerId === game.owner.id) {
-        sanitisedData.ownerId = game.owner.id
-        sanitisedData.accessKey = game.settings.accessKey
+      if (body.playerId === game.host.id) {
+        sanitisedData.host.id = game.host.id
+      } else {
+        sanitisedData.players.forEach(player => player.id = null)
+        sanitisedData.settings.accessKey = null
       }
 
       ctx.body = JSON.stringify({ success: true, game: sanitisedData });
@@ -203,8 +221,8 @@ let gameStructure = {
       game.players.splice(playerIndex, 1)
 
       // move game ownership to the next player at random
-      game.owner.id = game.players[0].id;
-      game.owner.name = game.players[0].name;
+      game.host.id = game.players[0].id;
+      game.host.name = game.players[0].name;
       db.gameCollection.update(game);
 
       // verify the removal actually worked

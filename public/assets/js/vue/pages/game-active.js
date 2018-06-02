@@ -15,6 +15,7 @@ let PageGameActive = Vue.component('PageGameActive', {
     data() {
       return {
         game: {},
+        isLoaded: false,
         isStarting: false,
         isJoining: false,
         updateData: true
@@ -69,6 +70,7 @@ let PageGameActive = Vue.component('PageGameActive', {
           gameId: this.$parent.player.gameId,
           playerId: this.$parent.player.id
         }).then(res => {
+          this.isLoaded = true
           if (res.data.success) {
             this.game = res.data.game
           } else {
@@ -83,32 +85,90 @@ let PageGameActive = Vue.component('PageGameActive', {
       }
     },
     computed: {
-      isOwner() {
-        return this.game.ownerId && (this.game.ownerId === this.$parent.player.id)
+      isHost() {
+        return this.game.host.id && (this.game.host.id === this.$parent.player.id)
       }
     },
     template: `
-    <div class="content">
-        <h1 class="title" v-text="game.name"></h1>
-        <h2 class="subtitle">{{ game.ownerName }}'s game</h2>
+    <div class="content game-active" v-if="isLoaded">
 
-        <div v-if="game.accessKey">
-          <pre v-text="game.accessKey"></pre>
+      <div class="columns">
+        <div class="column">
+          <h1 class="title is-3" v-text="game.name"></h1>
+          <h2 class="subtitle is-4">{{ game.host.name }}'s game</h2>
+        </div>
+      </div>
+
+      <div class="columns">
+        <div class="column">
+          <a class="button is-danger" v-on:click="leaveGame()">Leave Game</a>
+        </div>
+      </div>
+
+      <div class="columns game-settings">
+        <div class="column">
+          <b>Players:</b> {{ game.players.length }}/{{ game.settings.maxPlayers }}</div>
+        <div class="column">
+          <b>Score Limit:</b> {{ game.settings.scoreLimit }} points</div>
+        <div class="column">
+          <b>Turn Limit:</b> {{ game.settings.turnTimeLimit / 1000 }} seconds</div>
+        <div class="column">
+          <b>Access:</b> {{ game.settings.access }}</div>
+      </div>
+        
+      <div class="columns">
+        <div class="column">
+          <pre v-if="game.settings.access === 'private'" v-text="game.settings.accessKey"></pre>
+        </div>
+      </div>
+
+      <div class="game-started" v-if="game.hasStarted">
+
+        <div class="columns">
+          <div class="column">
+            <h3>Play Area</h3>
+            <div class="premises">
+              <div v-for="(premise, index) in game.premises" class="premise" :key=index>
+                <draggable class="draggable-area" v-model="premise.cards" :options="{group:'cards'}">
+                  <div class="card" v-for="(card, index1) in premise.cards" :key=index1>{{card.label}}</div>
+                </draggable>
+              </div>
+            </div>
+          </div>
         </div>
 
-        <a class="button is-danger" v-on:click="leaveGame()">Leave Game</a>
-
-        <div v-if="game.hasStarted">
-            <p>Game Started</p>
+        <div class="columns">
+          <div class="column">
+            <h3>Your Hand</h3>
+            <div class="player-hand">
+              <draggable class="draggable-area" v-model="game.me.cards" :options="{group:'cards'}">
+                <div class="card" v-for="(card, index) in game.me.cards" :key=index>
+                  <b v-text="card.label"></b>
+                </div>
+              </draggable>
+            </div>
+          </div>
         </div>
-        <div v-else>
-            <h3>Players:</h3>
-            <ul>
-                <li v-for="(player, index) in game.players" :key=index v-text=player.name></li>
+      </div>
+      <div class="game-waiting" v-else>
+        <div class="columns">
+          <div class="column">
+            <h3 class="title is-5">Players Connected ({{game.players.length}}/{{game.settings.maxPlayers}})</h3>
+            <ul class="player-list">
+                <li v-for="(player, index) in game.players" :key=index>
+                  <span v-text="player.name"></span>
+                </li>
             </ul>
-
-            <a :class="['button is-link', { 'is-loading': isStarting }]" :disabled="isStarting" v-if="isOwner" v-on:click.once="startGame()">Start Game</a>
+          </div>
         </div>
+        <div class="columns">
+          <div class="column">
+            <a :class="['button is-link is-large', { 'is-loading': isStarting }]" :disabled="isStarting" v-if="isHost" v-on:click.once="startGame()">Start Game</a>
+            <a class="button is-light islarge" disabled v-else>Waiting for host to start</a>
+          </div>
+        </div>
+      </div>
+
     </div>
   `
 });

@@ -10,7 +10,7 @@
   },
   "scripts": {
     "stylus": "stylus -w ./public/assets/stylus/app.styl -o ./public/assets/css",
-    "server-back": "nodemon --watch ./src app.js",
+    "server-back": "nodemon --watch ./src --watch ./bin ./bin/server.js",
     "server-front": "browser-sync start --server \"public\" --files \"public\" --port 8080 --no-ghost-mode --logLevel \"silent\"",
     "start": "concurrently --kill-others --names \"STYLUS,SERVER,FRONT\" \"npm run stylus\" \"npm run server-back\" \"npm run server-front\""
   },
@@ -27,12 +27,15 @@
     "js-cookie": "^2.2.0",
     "koa": "^2.5.1",
     "koa-bodyparser": "^4.2.1",
+    "koa-logger": "^3.2.0",
     "koa-router": "^7.4.0",
     "koa-static": "^4.0.3",
     "lokijs": "^1.5.4",
     "nanoid": "^1.0.2",
+    "socket.io": "^2.1.1",
     "vue": "^2.5.16",
-    "vue-router": "^3.0.1"
+    "vue-router": "^3.0.1",
+    "vuedraggable": "^2.16.0"
   },
   "devDependencies": {
     "browser-sync": "^2.24.4",

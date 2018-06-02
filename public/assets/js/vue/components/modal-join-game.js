@@ -59,7 +59,7 @@ let ModalJoinGame = Vue.component('ModalJoinGame', {
       <div class="modal-content box">
         <div class="columns">
           <div class="column">
-            <h2 class="title is-3">Join {{ game.ownerName }}'s game</h2>
+            <h2 class="title is-3">Join {{ game.host ? game.host.name : '' }}'s game</h2>
             <h2 class="subtitle" v-text="game.name"></h2>
           </div>
         </div>

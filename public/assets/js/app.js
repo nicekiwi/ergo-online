@@ -1,5 +1,5 @@
 const router = new VueRouter({
-  mode: 'history',
+  //mode: 'history',
   routes: [
     { path: '/', component: PageLanding },
     { path: '/games', component: PageGameList },
@@ -20,6 +20,9 @@ router.beforeEach((to, from, next) => {
 const app = new Vue({
   router,
   mounted() {
+
+    SocketEvent.fire('connected', null);
+
     this.init();
   },
   methods: {
@@ -132,7 +135,6 @@ const app = new Vue({
       </section>
       <ModalNewGame />
       <ModalJoinGame />
-      <ModalJoinGamePrivate />
       <ModalError />
     </div>
   `
