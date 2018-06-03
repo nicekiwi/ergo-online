@@ -11,11 +11,17 @@ const router = new Router()
 const server = require("http").createServer(app.callback())
 const io = require("socket.io")(server)
 
+const gameController = require('../src/controllers/game')
+
 io.on('connection', socket => {
+
+  // start broudcasting games to a user
+  gameController.broudcastGames(socket, io)
+
+
+
   console.log('a user connected')
 })
-
-const gameController = require('../src/controllers/game')
 
 router.get('/api/games/list', gameController.listGames)
 router.post('/api/games/new', gameController.newGame)

@@ -22,6 +22,7 @@ const app = new Vue({
   mounted() {
 
     SocketEvent.fire('connected', null);
+    SocketEvent.on('games-list-update', console.log)
 
     this.init();
   },

@@ -53,6 +53,27 @@ let gameStructure = {
     ctx.body = JSON.stringify(sanitisedGames)
   },
 
+  broudcastGames(socket, io) {
+    let games = db.gameCollection.find();
+    let sanitisedGames = []
+
+    games.forEach(game => {
+      sanitisedGames.push({
+        id: game.id,
+        name: game.name,
+        access: game.settings.access,
+        players: game.players.length,
+        hostName: game.host.name,
+        maxPlayers: game.settings.maxPlayers,
+        hasStarted: game.hasStarted
+      })
+    })
+
+    setInterval(() => {
+      io.emit('games-list-update', sanitisedGames)
+    }, 3000)
+  },
+
   newGame(ctx, next) {
 
     let body = ctx.request.body,
