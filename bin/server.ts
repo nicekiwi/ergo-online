@@ -1,24 +1,26 @@
-const Koa = require('koa')
-const bodyParser = require('koa-bodyparser')
-const logger = require("koa-logger")
-const Router = require('koa-router')
-const cors = require('@koa/cors')
-const serve = require('koa-static')
+import * as Koa from 'koa'
+import bodyParser from 'koa-bodyparser'
+import logger from "koa-logger"
+import Router from 'koa-router'
+import cors from '@koa/cors'
+import * as serve from 'koa-static'
+import socketio from 'socket.io'
+import * as http from 'http'
+
 const PORT = process.env.PORT || 3000
 
 const app = new Koa()
 const router = new Router()
-const server = require("http").createServer(app.callback())
-const io = require("socket.io")(server)
 
-const gameController = require('../src/controllers/game')
+const server = http.createServer(app.callback())
+const io = socketio(server)
+
+import gameController from '../src/controllers/game';
 
 io.on('connection', socket => {
 
   // start broudcasting games to a user
   gameController.broudcastGames(socket, io)
-
-
 
   console.log('a user connected')
 })

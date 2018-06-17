@@ -1,7 +1,8 @@
-const fs = require('fs')
-const db = require('../db')
-const logicController = require('./logic')
-const generate = require('nanoid/generate')
+import fs = require('fs');
+import db = require('../db');
+//import logicController = require('./logic');
+import generate = require('nanoid/generate');
+
 const alphabet = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_'
 const passabet = '0123456789'
 
@@ -129,7 +130,7 @@ let gameStructure = {
       game.hasStarted = true
       db.gameCollection.update(game)
 
-      logicController.initGame(gameId)
+      //logicController.initGame(gameId)
 
       ctx.body = JSON.stringify({ success: true })
     } else {
@@ -261,4 +262,4 @@ let gameStructure = {
   }
 }
 
-module.exports = gameStructure
+export default gameStructure

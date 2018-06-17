@@ -175,7 +175,7 @@ let gameLogic = {
     let dbGame = db.gameCollection.findOne({ id: gameId })
     let dbPlayers = dbGame.players;
 
-    let gameObject = new Game()
+    let gameObject = new Game(0)
 
     gameObject.addPlayers(dbPlayers);
     gameObject.dealCards();
