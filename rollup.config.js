@@ -13,38 +13,20 @@ export default {
   output: {
     format: 'iife',
     file: './public/assets/js/app.js',
-    sourceMap: true//,
-    // globals: {
-    //   'vue': 'Vue',
-    //   'socket.io-client': 'io',
-    //   'axios': 'axios',
-    //   'vue-router': 'VueRouter',
-    //   'js-cookie': 'Cookies'
-    // }
+    sourceMap: true
   },
-  // external: [ 
-  //   'vue', 
-  //   'socket.io-client', 
-  //   'axios', 
-  //   'vue-router', 
-  //   'js-cookie' 
-  // ],
   plugins: [
     resolve({
       extensions: ['.js', '.ts' ],
       jsnext: true,
-      main: true
+      main: true,
+      browser: true
     }),
-    commonjs({
-      namedExports: { 'node_modules/axios/index.js': [ 'axios' ] }
-    }),
-    
+    commonjs(),
     typescript({
       allowJs: true,
       tsconfig: false,
       module: 'es2015',
-      moduleResolution: "node",
-      target: 'es5',
       sourceMap: true
     }),
     vue(),

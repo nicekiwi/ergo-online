@@ -38,36 +38,17 @@
 
 <script lang="ts">
   import Vue from 'vue'
-  import VueRouter from 'vue-router'
-  import PageLanding from './pages/Landing.vue'
-  import PageGameList from './pages/GameList.vue'
-  import PageGameActive from './pages/GameActive.vue'
-  import PageNotFound from './pages/NotFound.vue'
   import { VueEvent, SocketEvent } from './utils/event'
   import Cookies from 'js-cookie'
   import axios from 'axios'
-
-  const router = new VueRouter({
-    //mode: 'history',
-    routes: [
-      { path: '/', component: PageLanding },
-      { path: '/games', component: PageGameList },
-      { path: '/games/:gameId', component: PageGameActive },
-      { path: '*', component: PageNotFound }
-    ]
-  })
-
-  // Make sure a player can only be in one game at a time
-  router.beforeEach((to, from, next) => {
-    next(vm => {
-      if (vm.$parent.player.gameId && vm.$parent.player.id) {
-        vm.$router.push(`/games/${vm.$parent.player.gameId}`)
-      }
-    })
-  })
+  import ModalNewGame from './components/ModalNewGame.vue'
+  import ModalJoinGame from './components/ModalJoinGame.vue'
+  import ModalError from './components/ModalError.vue'
 
   export default Vue.extend({
-    router,
+    components: {
+      ModalNewGame, ModalJoinGame, ModalError
+    },
     data() {
       return {
         title: 'Ergo Online',
