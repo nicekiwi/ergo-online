@@ -16,22 +16,31 @@ let isFull = game => {
 let gameStructure = {
 
   // When a player connects to the app
-  playerConnect(ctx, next) {
+  playerConnect(socket, io) {
     let body = ctx.request.body
     let playerId = body.playerId
     let gameId = body.gameId
     let game = db.gameCollection.findOne({ id: gameId })
+    let responsePayload = { 
+      player: {
+        id: generate(alphabet),
+        name: null,
+        gameId: null
+      }
+    }
 
     // check the game exists, hasn't ended and the player is in it
     if (game && !game.hasEnded && hasPlayer(game, playerId)) {
-      ctx.body = {
-        success: true
-      }
-    } else {
-      ctx.body = {
-        success: false
+      responsePayload = {
+        player: {
+          id: playerId,
+          name: hasPlayer(game, playerId).name,
+          gameId: gameId
+        }
       }
     }
+
+    socket.fire('connect-response', responsePayload)
   },
 
   listGames(ctx, next) {
@@ -54,23 +63,28 @@ let gameStructure = {
   },
 
   broudcastGames(socket, io) {
-    let games = db.gameCollection.find();
-    let sanitisedGames = []
 
-    games.forEach(game => {
-      sanitisedGames.push({
-        id: game.id,
-        name: game.name,
-        access: game.settings.access,
-        players: game.players.length,
-        hostName: game.host.name,
-        maxPlayers: game.settings.maxPlayers,
-        hasStarted: game.hasStarted
+    let getGames = () => {
+      let games = db.gameCollection.find();
+      let sanitisedGames = []
+  
+      games.forEach(game => {
+        sanitisedGames.push({
+          id: game.id,
+          name: game.name,
+          access: game.settings.access,
+          players: game.players.length,
+          hostName: game.host.name,
+          maxPlayers: game.settings.maxPlayers,
+          hasStarted: game.hasStarted
+        })
       })
-    })
+  
+      return games
+    }
 
     setInterval(() => {
-      io.emit('games-list-update', sanitisedGames)
+      io.emit('games-list-update', getGames())
     }, 3000)
   },
 
@@ -193,7 +207,7 @@ let gameStructure = {
 
       let meIndex = game.players.findIndex(x => x.id === body.playerId)
 
-      let sanitisedData = {
+      let sanitisedData = { 
         id: body.gameId,
         name: game.name,
         host: { id: null, name: game.host.name },

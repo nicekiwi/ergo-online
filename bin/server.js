@@ -15,12 +15,25 @@ const gameController = require('../src/controllers/game')
 
 io.on('connection', socket => {
 
-  // start broudcasting games to a user
-  gameController.broudcastGames(socket, io)
-
-
-
   console.log('a user connected')
+
+  socket.on('connect', payload => {
+    gameController.playerConnect(socket, io)
+  })
+
+  socket.on('request-games', payload => {
+    // start broudcasting games to a user
+    gameController.broudcastGames(socket, io)
+  })
+
+  // socket.on('request-game-data', payload => {
+  //   // start broudcasting games to a user
+  //   gameController.broudcastGames(socket, io)
+  // })
+
+
+
+  
 })
 
 router.get('/api/games/list', gameController.listGames)

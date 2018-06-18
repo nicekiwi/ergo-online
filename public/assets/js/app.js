@@ -19,46 +19,46 @@ router.beforeEach((to, from, next) => {
 
 const app = new Vue({
   router,
+  data() {
+    return {
+      title: 'Ergo Online',
+      subTitle: 'Do you event exist? Prove it!',
+      cookieName: 'ergo-player',
+      player: {
+        id: null,
+        name: null,
+        gameId: null
+      },
+      isLoaded: false
+    }
+  },
   mounted() {
-
-    SocketEvent.fire('connected', null);
-    SocketEvent.on('games-list-update', console.log)
-
     this.init();
   },
   methods: {
     init() {
-
       let playerCookie = Cookies.get(this.cookieName)
+      let connectPayload = { id: null, name: null, gameId: null }
 
       if (playerCookie !== undefined) {
-        this.player.id = playerCookie.split('|')[1] || null
-        this.player.name = playerCookie.split('|')[2] || null
-        this.player.gameId = playerCookie.split('|')[0] || null
+        connectPayload.player.id = playerCookie.split('|')[1] || null
+        connectPayload.player.name = playerCookie.split('|')[2] || null
+        connectPayload.player.gameId = playerCookie.split('|')[0] || null
       }
 
-      // check if player is in game that has not ended
-      if (this.player.id !== null) {
-        axios
-          .post('/api/game/connect', { 
-            gameId: this.player.gameId, 
-            playerId: this.player.id 
-          })
-          .then(res => {
-            this.isLoaded = true
-            if (res.data.success) {
-              this.$router.push(`/games/${this.player.gameId}`)
-            }
-          })
-          // todo; fix this
-          .catch(e => console.error)
-      } else {
+      SocketEvent.fire('connect', connectPayload)
+
+      SocketEvent.on('connect-response', payload => {
         this.isLoaded = true
-      }
+        this.updatePlayerData(payload.player)
+        if (payload.player.gameId) {
+          this.$router.push(`/games/${payload.player.gameId}`)
+        }
+      })
     },
     updatePlayerData(data) {
 
-      if (data && data.gameId) {
+      if (data) {
         this.player.id = data.id
         this.player.name = data.name
         this.player.gameId = data.gameId
@@ -89,19 +89,7 @@ const app = new Vue({
       return this.$route.path === '/'
     }
   },
-  data() {
-    return {
-      title: 'Ergo Online',
-      subTitle: 'Do you event exist? Prove it!',
-      cookieName: 'ergo-player',
-      player: {
-        id: null,
-        name: null,
-        gameId: null
-      },
-      isLoaded: false
-    }
-  },
+  
   template: `
     <div>
       <section v-if="isLandingPage" class="hero is-info is-medium">
