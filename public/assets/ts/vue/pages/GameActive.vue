@@ -254,10 +254,7 @@
       width: 100%;
       height: 70px;
       padding: 10px;
-
-      //&:not(:last-child) {
-        border-bottom: 3px solid #ccc;
-      //}
+      border-bottom: 3px solid #ccc;
     }
   }
 </style>

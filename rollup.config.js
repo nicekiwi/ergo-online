@@ -1,39 +1,58 @@
-import resolve from 'rollup-plugin-node-resolve'
 import commonjs from 'rollup-plugin-commonjs'
+import resolve from 'rollup-plugin-node-resolve'
 import typescript from 'rollup-plugin-typescript'
 import vue from 'rollup-plugin-vue'
-import postcss from 'rollup-plugin-postcss'
+import replaceHtmlVars from 'rollup-plugin-replace-html-vars'
+import butternut from 'rollup-plugin-butternut'
+import { terser } from "rollup-plugin-terser"
 
-// export default {
-//   input: 'src/main.js',
-//   output: {
-//     file: 'bundle.js',
-//     format: 'cjs'
-//   },
-//   plugins: [ 
-//     commonjs(), 
-//     resolve(),
-//     typescript(),
-//     vue(),
-//     postcss({
-//       plugins: [ 'Stylus' ]
-//     })
-//   ]
-// };
+const prodution = !process.env.ROLLUP_MATCH
 
 export default {
-  input: './public/assets/ts/vue/App.vue',
+  input: './public/assets/ts/index.ts',
   output: {
-    format: 'esm',
-    file: './public/assets/js/app.js'
+    format: 'iife',
+    file: './public/assets/js/app.js',
+    sourceMap: true//,
+    // globals: {
+    //   'vue': 'Vue',
+    //   'socket.io-client': 'io',
+    //   'axios': 'axios',
+    //   'vue-router': 'VueRouter',
+    //   'js-cookie': 'Cookies'
+    // }
   },
-  external: [ 'vue' ],
+  // external: [ 
+  //   'vue', 
+  //   'socket.io-client', 
+  //   'axios', 
+  //   'vue-router', 
+  //   'js-cookie' 
+  // ],
   plugins: [
-    typescript({
-      tsconfig: false,
-      experimentalDecorators: true,
-      module: 'es2015'
+    resolve({
+      extensions: ['.js', '.ts' ],
+      jsnext: true,
+      main: true
     }),
-    vue()
+    commonjs({
+      namedExports: { 'node_modules/axios/index.js': [ 'axios' ] }
+    }),
+    
+    typescript({
+      allowJs: true,
+      tsconfig: false,
+      module: 'es2015',
+      moduleResolution: "node",
+      target: 'es5',
+      sourceMap: true
+    }),
+    vue(),
+    replaceHtmlVars({
+      files: 'public/*.html',
+      from: /(\?t\=)(?:.*)(\")/g,
+      to: '$1' + Date.now() + '$2',
+    }),
+    prodution && terser()
   ]
 }
