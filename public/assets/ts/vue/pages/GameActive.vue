@@ -178,7 +178,7 @@
   })
 </script>
 
-<style lang="stylus" scoped>
+<style lang="styl" scoped>
   .game-active {
 
     .draggable-area {

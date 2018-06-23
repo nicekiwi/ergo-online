@@ -134,6 +134,6 @@
   })
 </script>
 
-<style lang="stylus">
+<style lang="styl">
   
 </style>

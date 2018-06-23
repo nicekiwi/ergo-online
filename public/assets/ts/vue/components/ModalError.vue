@@ -21,9 +21,14 @@
   import axios from 'axios'
   import { VueEvent } from '../utils/event'
 
+  interface modalData {
+    title: String,
+    message: String
+  }
+
   export default {
     mounted () {
-      VueEvent.on('modal-open-error', (data:object) => {
+      VueEvent.on('modal-open-error', (data:modalData) => {
         this.modalOpen = true
         this.title = data.title
         this.message = data.message
@@ -46,6 +51,6 @@
   }
 </script>
 
-<style lang="stylus" scoped>
+<style lang="styl" scoped>
   
 </style>

@@ -4,18 +4,15 @@ import typescript from 'rollup-plugin-typescript'
 import vue from 'rollup-plugin-vue'
 import replaceHtmlVars from 'rollup-plugin-replace-html-vars'
 import { terser } from 'rollup-plugin-terser'
-import postcss from 'rollup-plugin-postcss'
 import autoprefixer from 'autoprefixer'
-import stylus from 'stylus'
 import css from 'rollup-plugin-css-only'
-import poststylus from 'poststylus'
 
 const production = false //!process.env.ROLLUP_MATCH
 
 export default {
   input: './public/assets/ts/index.ts',
   output: {
-    format: 'iife',
+    format: 'esm',
     file: './public/static/app.js',
     sourceMap: true
   },
@@ -33,19 +30,18 @@ export default {
       module: 'es2015',
       sourceMap: true
     }),
-    //css(),
-    stylus().use(poststylus([
-      'autoprefixer'
-    ])),
+    css(),
     vue({ 
       css: false,
-      defaultLang: { 
-        script: 'ts',
-        style: 'styl',
-        template: 'pug'
+      style: {
+        postcssOptions: {
+          extract: true
+        },
+        postcssPlugins: [
+          autoprefixer()
+        ]
       }
     }),
-    
     replaceHtmlVars({
       files: 'public/*.html',
       from: /(\?t\=)(?:.*)(\")/g,

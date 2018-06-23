@@ -25,6 +25,6 @@
   }
 </script>
 
-<style lang="stylus" scoped>
+<style lang="styl" scoped>
   
 </style>
