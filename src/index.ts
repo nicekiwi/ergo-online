@@ -15,7 +15,7 @@ const router = new Router()
 const server = http.createServer(app.callback())
 const io = socketio(server)
 
-import gameController from '../src/controllers/game';
+import gameController from './controllers/game';
 
 io.on('connection', socket => {
 

@@ -1,5 +1,5 @@
 import fs = require('fs');
-import db = require('../db');
+import db = require('../config/db');
 //import logicController = require('./logic');
 import generate = require('nanoid/generate');
 

@@ -9,10 +9,10 @@ import css from 'rollup-plugin-css-only'
 
 const production = false //!process.env.ROLLUP_MATCH
 
-export default {
+export default [{
   input: './public/assets/ts/index.ts',
   output: {
-    format: 'esm',
+    format: 'iife',
     file: './public/static/app.js',
     sourceMap: true
   },
@@ -49,4 +49,4 @@ export default {
     }),
     production && terser()
   ]
-}
+}]

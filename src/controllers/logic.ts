@@ -1,4 +1,4 @@
-const db = require('../db')
+import db from '../config/db'
 
 Array.prototype.shuffle = function () {
   var m = this.length;
@@ -194,4 +194,4 @@ let gameLogic = {
 
 }
 
-module.exports = gameLogic
+export default gameLogic
