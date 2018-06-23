@@ -45,20 +45,18 @@
   import ModalJoinGame from './components/ModalJoinGame.vue'
   import ModalError from './components/ModalError.vue'
 
+  interface PlayerData {
+    name: string,
+    id: string,
+    gameId: string
+  }
+
   export default Vue.extend({
     components: {
       ModalNewGame, ModalJoinGame, ModalError
     },
     data() {
       return {
-        title: 'Ergo Online',
-        subTitle: 'Do you event exist? Prove it!',
-        cookieName: 'ergo-player',
-        player: {
-          id: null,
-          name: null,
-          gameId: null
-        },
         isLoaded: false
       }
     },
@@ -72,25 +70,26 @@
     methods: {
       init() {
 
-        let playerCookie = Cookies.get(this.cookieName)
+        let playerCookie = Cookies.get(this.$store.settings.cookieName)
 
         if (playerCookie !== undefined) {
-          this.player.id = playerCookie.split('|')[1] || null
-          this.player.name = playerCookie.split('|')[2] || null
-          this.player.gameId = playerCookie.split('|')[0] || null
+          this.$store.commit('setPlayerId', playerCookie.split('|')[1] || null)
+          this.$store.commit('setPlayerName', playerCookie.split('|')[2] || null)
+          this.$store.commit('setGameId', playerCookie.split('|')[0] || null)
         }
 
+        let playerId = this.$store.state.player.id
+        let playerName = this.$store.state.player.name
+        let gameId = this.$store.state.game.id
+
         // check if player is in game that has not ended
-        if (this.player.id !== null) {
+        if (playerId !== null) {
           axios
-            .post('/api/game/connect', { 
-              gameId: this.player.gameId, 
-              playerId: this.player.id 
-            })
+            .post('/api/game/connect', { gameId, playerId })
             .then(res => {
               this.isLoaded = true
               if (res.data.success) {
-                this.$router.push(`/games/${this.player.gameId}`)
+                this.$router.push(`/games/${gameId}`)
               }
             })
             // todo; fix this
@@ -99,7 +98,7 @@
           this.isLoaded = true
         }
       },
-      updatePlayerData(data:object) {
+      updatePlayerData(data:PlayerData) {
 
         if (data && data.gameId) {
           this.player.id = data.id
@@ -113,7 +112,7 @@
           this.deletePlayerCookie()
         }
       },
-      updatePlayerCookie(data:object) {
+      updatePlayerCookie(data:PlayerData) {
         Cookies.set(this.cookieName, `${data.gameId}|${data.id}|${data.name}`, { 
           expires: 7, path: '/' 
         })

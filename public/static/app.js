@@ -19836,7 +19836,6 @@
   };
 
   const __vue_script__ = script;
-              
   /* template */
   var __vue_render__ = function() {
     var _vm = this;
@@ -20211,11 +20210,7 @@
     ? { render: __vue_render__, staticRenderFns: __vue_staticRenderFns__ }
     : {};
   /* style */
-  const __vue_inject_styles__ = function (inject) {
-    if (!inject) return
-    inject("data-v-67c07978_0", { source: "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", map: undefined, media: undefined });
-
-  };
+  const __vue_inject_styles__ = undefined;
   /* scoped */
   const __vue_scope_id__ = "data-v-67c07978";
   /* module identifier */
@@ -20243,30 +20238,6 @@
     }
 
     component._scopeId = scope;
-
-    {
-      let hook;
-      if (style) {
-        hook = function(context) {
-          style.call(this, createInjector(context));
-        };
-      }
-
-      if (hook !== undefined) {
-        if (component.functional) {
-          // register for functional component in vue file
-          const originalRender = component.render;
-          component.render = function renderWithStyleInjection(h, context) {
-            hook.call(context);
-            return originalRender(h, context)
-          };
-        } else {
-          // inject component registration as beforeCreate hook
-          const existing = component.beforeCreate;
-          component.beforeCreate = existing ? [].concat(existing, hook) : [hook];
-        }
-      }
-    }
 
     return component
   }
@@ -20402,7 +20373,6 @@
   };
 
   const __vue_script__$1 = script$1;
-              
   /* template */
   var __vue_render__$1 = function() {
     var _vm = this;
@@ -20535,11 +20505,7 @@
     ? { render: __vue_render__$1, staticRenderFns: __vue_staticRenderFns__$1 }
     : {};
   /* style */
-  const __vue_inject_styles__$1 = function (inject) {
-    if (!inject) return
-    inject("data-v-23582171_0", { source: "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", map: undefined, media: undefined });
-
-  };
+  const __vue_inject_styles__$1 = undefined;
   /* scoped */
   const __vue_scope_id__$1 = "data-v-23582171";
   /* module identifier */
@@ -20567,30 +20533,6 @@
     }
 
     component._scopeId = scope;
-
-    {
-      let hook;
-      if (style) {
-        hook = function(context) {
-          style.call(this, createInjector(context));
-        };
-      }
-
-      if (hook !== undefined) {
-        if (component.functional) {
-          // register for functional component in vue file
-          const originalRender = component.render;
-          component.render = function renderWithStyleInjection(h, context) {
-            hook.call(context);
-            return originalRender(h, context)
-          };
-        } else {
-          // inject component registration as beforeCreate hook
-          const existing = component.beforeCreate;
-          component.beforeCreate = existing ? [].concat(existing, hook) : [hook];
-        }
-      }
-    }
 
     return component
   }
@@ -20691,7 +20633,6 @@
   };
 
   const __vue_script__$2 = script$2;
-              
   /* template */
   var __vue_render__$2 = function() {
     var _vm = this;
@@ -20735,11 +20676,7 @@
     ? { render: __vue_render__$2, staticRenderFns: __vue_staticRenderFns__$2 }
     : {};
   /* style */
-  const __vue_inject_styles__$2 = function (inject) {
-    if (!inject) return
-    inject("data-v-f659ba16_0", { source: "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", map: undefined, media: undefined });
-
-  };
+  const __vue_inject_styles__$2 = undefined;
   /* scoped */
   const __vue_scope_id__$2 = "data-v-f659ba16";
   /* module identifier */
@@ -20767,30 +20704,6 @@
     }
 
     component._scopeId = scope;
-
-    {
-      let hook;
-      if (style) {
-        hook = function(context) {
-          style.call(this, createInjector(context));
-        };
-      }
-
-      if (hook !== undefined) {
-        if (component.functional) {
-          // register for functional component in vue file
-          const originalRender = component.render;
-          component.render = function renderWithStyleInjection(h, context) {
-            hook.call(context);
-            return originalRender(h, context)
-          };
-        } else {
-          // inject component registration as beforeCreate hook
-          const existing = component.beforeCreate;
-          component.beforeCreate = existing ? [].concat(existing, hook) : [hook];
-        }
-      }
-    }
 
     return component
   }
@@ -20944,7 +20857,6 @@
   });
 
   const __vue_script__$3 = script$3;
-              
   /* template */
   var __vue_render__$3 = function() {
     var _vm = this;
@@ -21013,11 +20925,7 @@
     ? { render: __vue_render__$3, staticRenderFns: __vue_staticRenderFns__$3 }
     : {};
   /* style */
-  const __vue_inject_styles__$3 = function (inject) {
-    if (!inject) return
-    inject("data-v-72124081_0", { source: "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", map: undefined, media: undefined });
-
-  };
+  const __vue_inject_styles__$3 = undefined;
   /* scoped */
   const __vue_scope_id__$3 = undefined;
   /* module identifier */
@@ -21045,30 +20953,6 @@
     }
 
     component._scopeId = scope;
-
-    {
-      let hook;
-      if (style) {
-        hook = function(context) {
-          style.call(this, createInjector(context));
-        };
-      }
-
-      if (hook !== undefined) {
-        if (component.functional) {
-          // register for functional component in vue file
-          const originalRender = component.render;
-          component.render = function renderWithStyleInjection(h, context) {
-            hook.call(context);
-            return originalRender(h, context)
-          };
-        } else {
-          // inject component registration as beforeCreate hook
-          const existing = component.beforeCreate;
-          component.beforeCreate = existing ? [].concat(existing, hook) : [hook];
-        }
-      }
-    }
 
     return component
   }
@@ -21163,7 +21047,6 @@
   };
 
   const __vue_script__$4 = script$4;
-              
   /* template */
   var __vue_render__$4 = function() {
     var _vm = this;
@@ -21223,11 +21106,7 @@
     ? { render: __vue_render__$4, staticRenderFns: __vue_staticRenderFns__$4 }
     : {};
   /* style */
-  const __vue_inject_styles__$4 = function (inject) {
-    if (!inject) return
-    inject("data-v-e8772054_0", { source: "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", map: undefined, media: undefined });
-
-  };
+  const __vue_inject_styles__$4 = undefined;
   /* scoped */
   const __vue_scope_id__$4 = "data-v-e8772054";
   /* module identifier */
@@ -21255,30 +21134,6 @@
     }
 
     component._scopeId = scope;
-
-    {
-      let hook;
-      if (style) {
-        hook = function(context) {
-          style.call(this, createInjector(context));
-        };
-      }
-
-      if (hook !== undefined) {
-        if (component.functional) {
-          // register for functional component in vue file
-          const originalRender = component.render;
-          component.render = function renderWithStyleInjection(h, context) {
-            hook.call(context);
-            return originalRender(h, context)
-          };
-        } else {
-          // inject component registration as beforeCreate hook
-          const existing = component.beforeCreate;
-          component.beforeCreate = existing ? [].concat(existing, hook) : [hook];
-        }
-      }
-    }
 
     return component
   }
@@ -21406,7 +21261,6 @@
   };
 
   const __vue_script__$5 = script$5;
-              
   /* template */
   var __vue_render__$5 = function() {
     var _vm = this;
@@ -21499,11 +21353,7 @@
     ? { render: __vue_render__$5, staticRenderFns: __vue_staticRenderFns__$5 }
     : {};
   /* style */
-  const __vue_inject_styles__$5 = function (inject) {
-    if (!inject) return
-    inject("data-v-39b808a4_0", { source: "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", map: undefined, media: undefined });
-
-  };
+  const __vue_inject_styles__$5 = undefined;
   /* scoped */
   const __vue_scope_id__$5 = "data-v-39b808a4";
   /* module identifier */
@@ -21531,30 +21381,6 @@
     }
 
     component._scopeId = scope;
-
-    {
-      let hook;
-      if (style) {
-        hook = function(context) {
-          style.call(this, createInjector(context));
-        };
-      }
-
-      if (hook !== undefined) {
-        if (component.functional) {
-          // register for functional component in vue file
-          const originalRender = component.render;
-          component.render = function renderWithStyleInjection(h, context) {
-            hook.call(context);
-            return originalRender(h, context)
-          };
-        } else {
-          // inject component registration as beforeCreate hook
-          const existing = component.beforeCreate;
-          component.beforeCreate = existing ? [].concat(existing, hook) : [hook];
-        }
-      }
-    }
 
     return component
   }
@@ -21731,7 +21557,6 @@
   });
 
   const __vue_script__$6 = script$6;
-              
   /* template */
   var __vue_render__$6 = function() {
     var _vm = this;
@@ -21957,11 +21782,7 @@
     ? { render: __vue_render__$6, staticRenderFns: __vue_staticRenderFns__$6 }
     : {};
   /* style */
-  const __vue_inject_styles__$6 = function (inject) {
-    if (!inject) return
-    inject("data-v-9a2ad626_0", { source: "\n.game-active[data-v-9a2ad626] {\n.draggable-area {\n    width: 100%;\n    min-height: 50px;\n}\n.card {\n    cursor: move;\n    float: left;\n    padding: 10px;\n    width: 45px;\n    height: 50px;\n    border: 1px solid #ccc;\n    border-radius: 3px; \n    text-align: center;\n    margin-right: 10px;\n    text-transform: uppercase;\n    font-size: 22px;\n    line-height: 1.2;\n}\n.game-settings {\n    background-color: #eee;\n}\n.game-waiting {\nh3 {\n      margin-bottom: 10px;\n}\n.player-list {\n      list-style: none;\n      padding: 0;\n      margin: 0 0 25px;\nli {\n        width: 25%;\n        padding: 0 5px;\n        float: left;\n        margin-top: 0;\nspan {\n          display: block;\n          padding: 5px 0 8px;\n          background-color: #eeeeee;\n          font-size: 22px;\n          text-align: center;\n          color: #333;\n}\n}\n}\n.button {\n      width: 100%;\n}\n}\n}\n.player-hand[data-v-9a2ad626] {\n}\n.premises[data-v-9a2ad626] {\n  width: 100%;\n  border: 1px solid #ccc;\n  background-color: #efefef;\n  padding: 0 15px;\n  overflow-x: scroll;\n.premise {\n    width: 100%;\n    height: 70px;\n    padding: 10px;\n    border-bottom: 3px solid #ccc;\n}\n}\n", map: undefined, media: undefined });
-
-  };
+  const __vue_inject_styles__$6 = undefined;
   /* scoped */
   const __vue_scope_id__$6 = "data-v-9a2ad626";
   /* module identifier */
@@ -21989,30 +21810,6 @@
     }
 
     component._scopeId = scope;
-
-    {
-      let hook;
-      if (style) {
-        hook = function(context) {
-          style.call(this, createInjector(context));
-        };
-      }
-
-      if (hook !== undefined) {
-        if (component.functional) {
-          // register for functional component in vue file
-          const originalRender = component.render;
-          component.render = function renderWithStyleInjection(h, context) {
-            hook.call(context);
-            return originalRender(h, context)
-          };
-        } else {
-          // inject component registration as beforeCreate hook
-          const existing = component.beforeCreate;
-          component.beforeCreate = existing ? [].concat(existing, hook) : [hook];
-        }
-      }
-    }
 
     return component
   }
@@ -22106,7 +21903,6 @@
   };
 
   const __vue_script__$7 = script$7;
-              
   /* template */
   var __vue_render__$7 = function() {
     var _vm = this;
@@ -22121,11 +21917,7 @@
     ? { render: __vue_render__$7, staticRenderFns: __vue_staticRenderFns__$7 }
     : {};
   /* style */
-  const __vue_inject_styles__$7 = function (inject) {
-    if (!inject) return
-    inject("data-v-30e3447c_0", { source: "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", map: undefined, media: undefined });
-
-  };
+  const __vue_inject_styles__$7 = undefined;
   /* scoped */
   const __vue_scope_id__$7 = "data-v-30e3447c";
   /* module identifier */
@@ -22153,30 +21945,6 @@
     }
 
     component._scopeId = scope;
-
-    {
-      let hook;
-      if (style) {
-        hook = function(context) {
-          style.call(this, createInjector(context));
-        };
-      }
-
-      if (hook !== undefined) {
-        if (component.functional) {
-          // register for functional component in vue file
-          const originalRender = component.render;
-          component.render = function renderWithStyleInjection(h, context) {
-            hook.call(context);
-            return originalRender(h, context)
-          };
-        } else {
-          // inject component registration as beforeCreate hook
-          const existing = component.beforeCreate;
-          component.beforeCreate = existing ? [].concat(existing, hook) : [hook];
-        }
-      }
-    }
 
     return component
   }
